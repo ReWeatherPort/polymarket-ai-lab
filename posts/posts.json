@@ -1,5 +1,11 @@
 [
   {
+    "title": "nba2024-25evkelly",
+    "date": "",
+    "path": "content/posts/nba2024-25evkelly.md",
+    "excerpt": "title: \"NBA雷霆隊2024-25賽季投注分析：EV與Kelly策略實戰\"\ndate: 2025-12-07\nexcerpt: \"本文分析OKC雷霆隊2024-25賽季的投注策略，透過Expected Value（EV）和Kelly Criterion資金管理方法，結合back-to-back賽程的統計數據，建構系統化的NBA投注框架。預測勝率62場，年度ROI可達58.6%。\"\ntags: [\"NBA\", \"投注分析\", \"EV\", \"Kelly Criterion\", \"體育博彩\", \"數據分析\", \"OKC Thunder\"]\npath: content/posts/nba2024-25evkelly.md"
+  },
+  {
     "title": "OKC x Polymarket 實驗日誌｜2025-01-01",
     "date": "2025-01-01T10:00:00+08:00",
     "path": "content/posts/okc-experiment-2025-01-01.md",
