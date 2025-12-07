@@ -25,6 +25,8 @@
   --card-shadow: 0 8px 24px rgba(17,24,39,0.06);
   --on-primary: #ffffff;
   --on-surface: var(--text);
+  --toast-bg: rgba(10,20,30,0.95);
+  --toast-color: #ffffff;
   --danger: #c01530;
   --radius: 10px;
   --container-max: 1100px;
@@ -49,6 +51,8 @@
   --tag-bg: rgba(255,255,255,0.03);
   --tag-color: var(--text);
   --danger: #ff6b6b;
+  --toast-bg: rgba(255,255,255,0.06);
+  --toast-color: var(--text);
 }
 
 /* Common UI classes */
@@ -87,6 +91,9 @@ body { background: var(--bg); color: var(--text); font-family: Inter, ui-sans-se
 /* Toast notifications */
 .toast { pointer-events: auto; }
 .toast a { color: inherit; text-decoration: underline; }
+
+.toast-default { background: var(--toast-bg); color: var(--toast-color); }
+.toast-error { background: var(--danger); color: var(--on-primary); }
 
 /* Site navigation (shared) */
 nav {

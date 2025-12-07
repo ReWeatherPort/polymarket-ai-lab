@@ -94,11 +94,11 @@
     const el = document.createElement('div');
     el.className = 'toast toast-' + type;
     el.textContent = message;
-    el.style.background = opts.bg || (type === 'error' ? 'rgba(220,38,38,0.95)' : 'rgba(10,20,30,0.95)');
-    el.style.color = opts.color || '#fff';
+    // use theme-aware CSS classes instead of hard-coded inline colors
+    el.classList.add(type === 'error' ? 'toast-error' : 'toast-default');
     el.style.padding = '10px 14px';
     el.style.borderRadius = '8px';
-    el.style.boxShadow = '0 6px 24px rgba(2,6,23,0.5)';
+    el.style.boxShadow = '0 6px 24px rgba(2,6,23,0.15)';
     el.style.maxWidth = '320px';
     el.style.fontSize = '13px';
     el.style.opacity = '0';
