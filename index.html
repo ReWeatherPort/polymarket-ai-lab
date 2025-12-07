@@ -305,7 +305,7 @@
     }
 
     .stat-value.negative {
-      color: #c01530;
+      color: var(--danger);
     }
 
     /* Table */
@@ -338,7 +338,7 @@
     }
 
     tr:hover {
-      background: #f9f9f7;
+      background: var(--surface);
     }
 
     /* Tags */
@@ -353,18 +353,18 @@
     }
 
     .tag-experiment {
-      background: #e0f2fe;
-      color: #0369a1;
+      background: var(--info-bg);
+      color: var(--info-color);
     }
 
     .tag-guide {
-      background: #dbeafe;
-      color: #1e40af;
+      background: var(--accent-light);
+      color: var(--accent-dark);
     }
 
     .tag-tool {
-      background: #dcfce7;
-      color: #166534;
+      background: var(--success-bg);
+      color: var(--success-color);
     }
 
     /* post tags and read-more button */
@@ -394,7 +394,7 @@
 
     /* Footer */
     footer {
-      background: var(--color-text);
+      background: var(--text);
       color: white;
       padding: 48px 20px;
       margin-top: 100px;
@@ -578,10 +578,10 @@
     <div class="experiment-item">
       <div class="experiment-header">
         <span class="experiment-title">
-          <span class="status-live" style="background: #ca8a04;"></span>
+          <span class="status-live" style="background: var(--color-warning);"></span>
           新聞事件市場套利實驗
         </span>
-        <span class="tag tag-experiment" style="background: #fef3c7; color: #92400e;">籌備中</span>
+        <span class="tag tag-experiment" style="background: var(--warning-bg, #fef3c7); color: var(--warning-text, #92400e);">籌備中</span>
       </div>
       <p style="color: var(--color-text-secondary); font-size: 14px; margin-bottom: 12px;">
         監控 Polymarket 新上線的市場（選舉、經濟數據發布），尋找高波動性機會。
@@ -589,11 +589,11 @@
       <div class="experiment-stats">
         <div class="stat">
           <span class="stat-label">狀態</span>
-          <span class="stat-value" style="color: #626c71;">研究階段</span>
+          <span class="stat-value" style="color: var(--muted);">研究階段</span>
         </div>
         <div class="stat">
           <span class="stat-label">啟動日期</span>
-          <span class="stat-value" style="color: #626c71;">2025/12/15</span>
+          <span class="stat-value" style="color: var(--muted);">2025/12/15</span>
         </div>
       </div>
     </div>
@@ -816,7 +816,7 @@
   async function loadPosts() {
     const container = document.getElementById('posts-list');
     if (!container) return;
-    container.innerHTML = '<p style="color: #626c71;">載入中…</p>';
+    container.innerHTML = '<p style="color: var(--muted);">載入中…</p>';
     try {
       // try multiple candidate URLs to locate posts manifest
       const candidates = [
@@ -839,7 +839,7 @@
       if (!res) throw new Error('找不到 posts/posts.json — 已嘗試路徑: ' + candidates.join(', '));
       const posts = await res.json();
       if (!Array.isArray(posts) || posts.length === 0) {
-        container.innerHTML = '<p style="color: #626c71;">目前尚無文章。請將 Markdown 檔放到 `content/posts/`，並使用 `scripts/generate_posts_manifest.py` 產生 `posts/posts.json`。</p>';
+        container.innerHTML = '<p style="color: var(--muted);">目前尚無文章。請將 Markdown 檔放到 `content/posts/`，並使用 `scripts/generate_posts_manifest.py` 產生 `posts/posts.json`。</p>';
         return;
       }
 
@@ -854,16 +854,16 @@
         // build tags HTML if available
         let tagsHtml = '';
         if (post.tags && Array.isArray(post.tags)) {
-          tagsHtml = '<div class="post-tags">' + post.tags.map(t => `<span class="tag" style="background:#eef6f8;color:#036;">${escapeHtml(t)}</span>`).join('') + '</div>';
+          tagsHtml = '<div class="post-tags">' + post.tags.map(t => `<span class="tag" style="background:var(--tag-bg);color:var(--tag-color);">${escapeHtml(t)}</span>`).join('') + '</div>';
         } else if (post.tags && typeof post.tags === 'string') {
-          tagsHtml = `<div class="post-tags"><span class="tag" style="background:#eef6f8;color:#036;">${escapeHtml(post.tags)}</span></div>`;
+          tagsHtml = `<div class="post-tags"><span class="tag" style="background:var(--tag-bg);color:var(--tag-color);">${escapeHtml(post.tags)}</span></div>`;
         }
 
         card.innerHTML = `
           <div class="card" style="min-height:120px;">
             <h3 style="margin-bottom:8px;">${escapeHtml(post.title || 'Untitled')}</h3>
-            <p style="color: #626c71; font-size:13px; margin-bottom:8px;">${post.date || ''}</p>
-            <p style="color: #626c71; font-size:14px;">${escapeHtml(post.excerpt || '')}</p>
+            <p style="color: var(--muted); font-size:13px; margin-bottom:8px;">${post.date || ''}</p>
+            <p style="color: var(--muted); font-size:14px;">${escapeHtml(post.excerpt || '')}</p>
             ${tagsHtml}
             <div><span class="read-more">閱讀更多</span></div>
           </div>
@@ -872,7 +872,7 @@
       });
     } catch (err) {
       console.error('loadPosts error', err);
-      container.innerHTML = `<p style="color:#c01530;">載入文章清單失敗：${escapeHtml(err.message)}。<br>確認已存在 ` +
+      container.innerHTML = `<p style="color:var(--danger);">載入文章清單失敗：${escapeHtml(err.message)}。<br>確認已存在 ` +
         "`posts/posts.json`，或在 repo 執行 `python scripts/generate_posts_manifest.py` 來產生。" +
         " 如果你在本機以 file:// 打開，請改用本地伺服器或將檔案推上 GitHub Pages。" +
         `</p>`;

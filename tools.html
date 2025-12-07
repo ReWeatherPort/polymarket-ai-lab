@@ -6,8 +6,17 @@
   <title>工具與資源 - Polymarket AI Lab</title>
   <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
   <style>
-    :root{--color-primary:#32a8c2;--text:#134252;--bg:#f8fbfc;--muted:#6b7280}
-    [data-theme="dark"]{--bg:#071018;--text:#e6eef6;--muted:#9aa6ad}
+    :root{
+      --color-primary:#32a8c2;
+      --color-primary-light:#50bdd6;
+      --bg:#f8fbfc;
+      --surface:#ffffff;
+      --text:#134252;
+      --muted:#6b7280;
+      --border:#e6eef0;
+      --card-bg:var(--surface);
+    }
+    [data-theme="dark"]{--bg:#071018;--surface:#071018;--text:#e6eef6;--muted:#9aa6ad;--border:rgba(255,255,255,0.04);--card-bg:#071018}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
     .container{max-width:1100px;margin:0 auto}
     header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
@@ -15,7 +24,7 @@
     nav a{margin-left:12px;padding:8px 10px;border-radius:8px}
     #themeToggle{margin-left:8px}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
-    .card{background:#fff;padding:18px;border-radius:10px;border:1px solid #e6eef0}
+    .card{background:var(--card-bg);padding:18px;border-radius:10px;border:1px solid var(--border)}
     .card h3{margin-top:0}
     .btn{display:inline-block;padding:8px 12px;background:var(--color-primary);color:white;border-radius:8px;text-decoration:none}
   </style>
@@ -33,7 +42,7 @@
     </header>
 
     <h1>工具與資源</h1>
-    <p style="color:#6b7280">精選對 Polymarket 研究／交易有用的文件、分析工具與模板。</p>
+    <p style="color:var(--muted)">精選對 Polymarket 研究／交易有用的文件、分析工具與模板。</p>
 
     <div class="grid" style="margin-top:18px">
       <div class="card">
@@ -79,7 +88,7 @@
       </div>
     </div>
 
-    <p style="margin-top:20px;color:#6b7280">如果你想把某個工具加入列表，請把連結或檔案放到 `static/`，或在 repo 建 issue，我會幫你加入。</p>
+    <p style="margin-top:20px;color:var(--muted)">如果你想把某個工具加入列表，請把連結或檔案放到 `static/`，或在 repo 建 issue，我會幫你加入。</p>
   </div>
   <script>
     (function(){
