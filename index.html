@@ -15,22 +15,38 @@
       --color-accent:#a84b2f;
       --color-success:#208080;
       --color-warning:#ca8a04;
-      --color-bg:#fcfcf9;
-      --color-surface:#ffffff;
-      --color-text:#134252;
-      --color-text-secondary:#626c71;
-      --color-border:#e0e0e0;
-      --card-bg: var(--color-surface);
+      --bg:#fcfcf9;
+      --surface:#ffffff;
+      --text:#0f2930; /* darker, more professional */
+      --heading:#0b2b32;
+      --lead:#274648;
+      --muted:#5f6b6f;
+      --border:#e6eef0;
+      --card-bg: var(--surface);
       --code-bg: #0b1220;
+      --tag-bg:#eef6f8;
+      --tag-color:#036;
+      --icon-bg: rgba(50,168,194,0.08);
+      --icon-color: var(--color-primary);
+      --card-shadow: 0 8px 24px rgba(17,24,39,0.06);
+      --danger:#c01530;
     }
     [data-theme="dark"]{
-      --color-bg:#071018;
-      --color-surface:#071018;
-      --color-text:#e6eef6;
-      --color-text-secondary:#9aa6ad;
-      --color-border:rgba(255,255,255,0.04);
+      --bg:#071018;
+      --surface:#071018;
+      --text:#e6eef6;
+      --heading:#e6eef6;
+      --lead:#c3d6df;
+      --muted:#9aa6ad;
+      --border:rgba(255,255,255,0.04);
       --card-bg:#071018;
       --code-bg:#021016;
+      --icon-bg: rgba(43,176,200,0.08);
+      --icon-color: #93e1f5;
+      --card-shadow: 0 8px 30px rgba(0,0,0,0.35);
+      --tag-bg: rgba(255,255,255,0.03);
+      --tag-color: var(--text);
+      --danger:#ff6b6b;
     }
 
     * {
@@ -206,15 +222,25 @@
     .card h3 {
       font-size: 18px;
       margin-bottom: 8px;
-      color: var(--color-text);
-      font-weight: 600;
+      color: var(--heading);
+      font-weight: 700;
+      letter-spacing: -0.2px;
     }
 
     .card p {
       font-size: 14px;
-      color: var(--color-text-secondary);
+      color: var(--lead);
       line-height: 1.6;
     }
+
+    /* Icon and card visuals */
+    .card-icon {
+      width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; background:var(--icon-bg); color:var(--icon-color); font-size:20px; margin-bottom:10px; flex-shrink:0;
+    }
+
+    .card { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .card:hover, .card.is-hover, .card:focus-within { transform: translateY(-6px); box-shadow: var(--card-shadow); border-color: rgba(50,168,194,0.12); }
+    .card:focus { outline: 3px solid rgba(50,168,194,0.12); }
 
     /* Feature Cards */
     .feature-card {
@@ -850,6 +876,7 @@
         const card = document.createElement('a');
         card.href = `post.html?post=${encodeURIComponent(post.path)}`;
         card.style.textDecoration = 'none';
+        card.classList.add('post-link');
 
         // build tags HTML if available
         let tagsHtml = '';
@@ -860,14 +887,31 @@
         }
 
         card.innerHTML = `
-          <div class="card" style="min-height:120px;">
-            <h3 style="margin-bottom:8px;">${escapeHtml(post.title || 'Untitled')}</h3>
-            <p style="color: var(--muted); font-size:13px; margin-bottom:8px;">${post.date || ''}</p>
-            <p style="color: var(--muted); font-size:14px;">${escapeHtml(post.excerpt || '')}</p>
-            ${tagsHtml}
-            <div><span class="read-more">閱讀更多</span></div>
+          <div class="card" style="min-height:120px; display:flex; gap:14px; align-items:flex-start;">
+            <div class="card-icon">📝</div>
+            <div style="flex:1">
+              <h3 style="margin-bottom:8px;">${escapeHtml(post.title || 'Untitled')}</h3>
+              <p style="color: var(--muted); font-size:13px; margin-bottom:8px;">${post.date || ''}</p>
+              <p style="color: var(--muted); font-size:14px;">${escapeHtml(post.excerpt || '')}</p>
+              ${tagsHtml}
+              <div style="margin-top:10px"><span class="read-more">閱讀更多</span></div>
+            </div>
           </div>
         `;
+
+        // accessibility & interactive behavior
+        card.setAttribute('role', 'link');
+        card.setAttribute('aria-label', escapeHtml(post.title || '文章'));
+        // keyboard: allow Space to activate (Anchor handles Enter by default)
+        card.addEventListener('keydown', (ev) => {
+          if (ev.key === ' ' || ev.key === 'Spacebar') { ev.preventDefault(); card.click(); }
+        });
+        // hover/focus visual toggles
+        card.addEventListener('mouseenter', ()=> { card.querySelector('.card').classList.add('is-hover'); });
+        card.addEventListener('mouseleave', ()=> { card.querySelector('.card').classList.remove('is-hover'); });
+        card.addEventListener('focus', ()=> { card.querySelector('.card').classList.add('is-hover'); }, true);
+        card.addEventListener('blur', ()=> { card.querySelector('.card').classList.remove('is-hover'); }, true);
+
         container.appendChild(card);
       });
     } catch (err) {
@@ -885,6 +929,20 @@
   }
 
   loadPosts();
+
+  // Small enhancement: make existing static cards (feature/guide/etc.) keyboard-focusable and interactive
+  document.querySelectorAll('.grid a.card, .card:not(a)').forEach(el => {
+    // if anchor already, ensure it has keyboard styles; otherwise make container focusable
+    if (el.tagName !== 'A') {
+      el.tabIndex = 0;
+      el.setAttribute('role','group');
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { const a = el.querySelector('a'); if(a) a.click(); } });
+    }
+    el.addEventListener('mouseenter', ()=> el.classList.add('is-hover'));
+    el.addEventListener('mouseleave', ()=> el.classList.remove('is-hover'));
+    el.addEventListener('focus', ()=> el.classList.add('is-hover'));
+    el.addEventListener('blur', ()=> el.classList.remove('is-hover'));
+  });
 </script>
 
 <!-- Theme toggle script: preserves choice in localStorage and respects system pref -->
