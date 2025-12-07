@@ -13,7 +13,7 @@
     </div>
     <div class="stat">
       <span class="label">Win Rate</span>
-      <span class="value">{{ mul .Params.win_rate 100.0 | printf "%.0f" }}%</span>
+      <span class="value">{{ $wr := float (default 0 .Params.win_rate) }}{{ if gt $wr 0 }}{{ printf "%.0f" (mul $wr 100) }}%{{ else }}—{{ end }}</span>
     </div>
     <div class="stat">
       <span class="label">Max Drawdown</span>
