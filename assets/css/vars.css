@@ -118,3 +118,13 @@ nav button.btn-ghost { margin-left: 8px; padding: 8px 10px; border-radius: 6px; 
 
 /* ensure main content doesn't hide under fixed nav */
 main, .container { padding-top: 64px; }
+
+/* mobile nav open state */
+nav.nav-open { position: fixed; left: 0; top: 0; right: 0; }
+nav .nav-hamburger { display: none; }
+@media (max-width: 900px) {
+  nav .nav-hamburger { display: inline-block; margin-right:12px }
+  nav.nav-open ul { display:flex; flex-direction:column; gap:8px; padding:12px 20px; background:var(--surface); position:absolute; left:0; right:0; top:56px; box-shadow:0 8px 24px rgba(0,0,0,0.08); }
+  nav.nav-open ul li { width:100%; }
+  nav.nav-open ul li a.nav-pill { display:block; padding:12px 14px; }
+}

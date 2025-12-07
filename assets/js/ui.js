@@ -19,6 +19,29 @@
     });
   }
 
+  // Mobile nav toggle: insert hamburger and handle open/close
+  function initMobileNav(){
+    const navs = document.querySelectorAll('nav');
+    navs.forEach(nav => {
+      if (nav.querySelector('.nav-hamburger')) return; // already added
+      const btn = document.createElement('button');
+      btn.className = 'nav-hamburger btn-ghost';
+      btn.setAttribute('aria-label','打開選單');
+      btn.innerHTML = '☰';
+      btn.style.display = 'none';
+      btn.style.fontSize = '18px';
+      btn.style.lineHeight = '1';
+      btn.style.background = 'transparent';
+      btn.style.border = 'none';
+      btn.style.cursor = 'pointer';
+      btn.addEventListener('click', ()=>{
+        nav.classList.toggle('nav-open');
+      });
+      // Insert as first child for visual ordering
+      nav.insertBefore(btn, nav.firstChild);
+    });
+  }
+
   function makeCardsInteractive(scope=document){
     // For anchors and static cards
     const nodes = scope.querySelectorAll('.grid a.card, .card');
@@ -42,6 +65,7 @@
   window.initUI = function(){
     initThemeToggle();
     makeCardsInteractive(document);
+    initMobileNav();
   };
 
   // Lightweight toast notifications
