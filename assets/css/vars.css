@@ -28,6 +28,8 @@
   --toast-bg: rgba(10,20,30,0.95);
   --toast-color: #ffffff;
   --danger: #c01530;
+  --warning-bg: #fef3c7;
+  --warning-text: #92400e;
   --radius: 10px;
   --container-max: 1100px;
 }
@@ -51,6 +53,8 @@
   --tag-bg: rgba(255,255,255,0.03);
   --tag-color: var(--text);
   --danger: #ff6b6b;
+  --warning-bg: #2b2f22;
+  --warning-text: #ffdca3;
   --toast-bg: rgba(255,255,255,0.06);
   --toast-color: var(--text);
 }
@@ -65,6 +69,7 @@
 .tag { display:inline-block; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:6px; }
 .tag-experiment { background: var(--tag-bg); color: var(--tag-color); }
 .tag-guide { background: var(--table-head-bg); color: var(--heading); }
+.tag-warning { background: var(--warning-bg); color: var(--warning-text); }
 
 .read-more { display:inline-block; margin-top:8px; padding:8px 12px; background:var(--color-primary); color:var(--on-primary); border-radius:6px; text-decoration:none; font-weight:600 }
 
