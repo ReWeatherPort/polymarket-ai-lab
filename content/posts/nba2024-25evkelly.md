@@ -1,8 +1,9 @@
+---
 title: "NBA雷霆隊2024-25賽季投注分析：EV與Kelly策略實戰"
 date: 2025-12-07
 excerpt: "本文分析OKC雷霆隊2024-25賽季的投注策略，透過Expected Value（EV）和Kelly Criterion資金管理方法，結合back-to-back賽程的統計數據，建構系統化的NBA投注框架。預測勝率62場，年度ROI可達58.6%。"
 tags: ["NBA", "投注分析", "EV", "Kelly Criterion", "體育博彩", "數據分析", "OKC Thunder"]
-path: content/posts/nba2024-25evkelly.md
+---
 
 # NBA 雷霆隊 2024-25 賽季投注實驗：EV 與 Kelly Criterion 實戰筆記
 
