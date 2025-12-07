@@ -268,7 +268,7 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      alert('已產生 Markdown 檔，請把它放到 repo 的 `content/posts/`，然後執行 `python .\\scripts\\generate_posts_manifest.py` 並推到 GitHub。');
+      if (window.showToast) showToast('已產生 Markdown 檔，請把它放到 repo 的 content/posts/，然後執行 scripts/generate_posts_manifest.py 並推到 GitHub。', {timeout:6000});
     });
 
     // Publish to GitHub: create-or-update (handles existing file by fetching sha)
@@ -313,16 +313,19 @@
         const data = await res.json();
         if(res.ok){
           const url = data.content && data.content.html_url ? data.content.html_url : `https://github.com/${repoOwner}/${repoName}/blob/${branch}/${path}`;
-          alert('已發佈到 GitHub： ' + url);
+          if (window.showToast) showToast('已發佈到 GitHub： ' + url, {timeout:8000});
+          else alert('已發佈到 GitHub： ' + url);
         } else {
           console.error('Publish error', data);
           let msg = data && data.message ? data.message : 'Unknown error';
           if (data && data.errors) msg += '\n' + JSON.stringify(data.errors);
-          alert('發佈失敗：' + msg);
+          if (window.showToast) showToast('發佈失敗：' + msg, {type:'error', timeout:8000});
+          else alert('發佈失敗：' + msg);
         }
       }catch(err){
         console.error(err);
-        alert('發佈時發生錯誤：' + err.message);
+        if (window.showToast) showToast('發佈時發生錯誤：' + err.message, {type:'error'});
+        else alert('發佈時發生錯誤：' + err.message);
       } finally {
         publishBtn.disabled = false;
         publishBtn.textContent = prevLabel;
