@@ -18,8 +18,8 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-      background: var(--color-bg);
-      color: var(--color-text);
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.6;
       font-size: 16px;
     }
@@ -33,8 +33,8 @@
       position: fixed;
       top: 0;
       width: 100%;
-      background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       padding: 16px 20px;
       display: flex;
       justify-content: space-between;
@@ -45,7 +45,7 @@
 
     nav .logo{font-size:18px;font-weight:700;color:var(--color-primary);text-decoration:none}
     nav ul{display:flex;list-style:none;gap:12px;align-items:center}
-    nav a{color:var(--color-text);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:8px;transition:all .15s}
+    nav a{color:var(--text);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:8px;transition:all .15s}
     nav a:hover{background:rgba(50,168,194,0.06)}
     nav .nav-pill{background:transparent}
     nav #themeToggle{margin-left:8px}
@@ -142,13 +142,13 @@
     section h2 {
       font-size: 32px;
       margin-bottom: 12px;
-      color: var(--color-text);
+      color: var(--text);
       font-weight: 700;
     }
 
     section .subtitle {
       font-size: 16px;
-      color: var(--color-text-secondary);
+      color: var(--muted);
       margin-bottom: 32px;
     }
 
@@ -161,8 +161,8 @@
     }
 
     .card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 28px;
       transition: all 0.3s;
@@ -231,19 +231,19 @@
 
     .feature-content h3 {
       margin-bottom: 8px;
-      color: var(--color-text);
+      color: var(--text);
       font-weight: 600;
     }
 
     .feature-content p {
-      color: var(--color-text-secondary);
+      color: var(--muted);
       font-size: 14px;
     }
 
     /* Experiments Section */
     .experiment-item {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 24px;
       margin-bottom: 16px;
@@ -260,7 +260,7 @@
     .experiment-title {
       font-size: 16px;
       font-weight: 600;
-      color: var(--color-text);
+      color: var(--text);
     }
 
     .experiment-stats {
@@ -276,7 +276,7 @@
 
     .stat-label {
       font-size: 12px;
-      color: var(--color-text-secondary);
+      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -308,7 +308,7 @@
     }
 
     thead {
-      background: var(--color-bg);
+      background: var(--bg);
       border-bottom: 2px solid var(--color-primary);
     }
 
@@ -316,7 +316,7 @@
       padding: 12px;
       text-align: left;
       font-weight: 600;
-      color: var(--color-text);
+      color: var(--text);
     }
 
     td {
@@ -340,18 +340,18 @@
     }
 
     .tag-experiment {
-      background: var(--info-bg);
-      color: var(--info-color);
+      background: var(--tag-bg);
+      color: var(--tag-color);
     }
 
     .tag-guide {
-      background: var(--accent-light);
-      color: var(--accent-dark);
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
     }
 
     .tag-tool {
-      background: var(--success-bg);
-      color: var(--success-color);
+      background: var(--tag-bg);
+      color: var(--color-success);
     }
 
     /* post tags and read-more button */
@@ -466,7 +466,7 @@
 <body>
 
   <nav>
-  <a href="#" class="logo">🚀 Polymarket AI Lab</a>
+  <a href="index.html" class="logo">🚀 Polymarket AI Lab</a>
   <ul>
     <li><a class="nav-pill" href="experiments/index.html">實驗</a></li>
     <li><a class="nav-pill" href="tools.html">工具</a></li>
@@ -537,7 +537,7 @@
         </span>
         <span class="tag tag-experiment">進行中</span>
       </div>
-      <p style="color: var(--color-text-secondary); font-size: 14px; margin-bottom: 12px;">
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">
         每場 OKC 比賽，在 Polymarket 尋找最低買入價格的「OKC win」份額，固定資金管理，追蹤總收益與勝率。
       </p>
       <div class="experiment-stats">
@@ -570,7 +570,7 @@
         </span>
         <span class="tag tag-warning">籌備中</span>
       </div>
-      <p style="color: var(--color-text-secondary); font-size: 14px; margin-bottom: 12px;">
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">
         監控 Polymarket 新上線的市場（選舉、經濟數據發布），尋找高波動性機會。
       </p>
       <div class="experiment-stats">
@@ -640,19 +640,19 @@
       <div class="card">
         <h3>Polymarket 新功能上線（示範）</h3>
         <p class="subtitle" style="margin-bottom:8px">2025-11-30</p>
-        <p style="color:var(--color-text-secondary);">Polymarket 宣布測試新的拍賣機制，可能改變短期流動性配置。詳細討論與我們的實驗影響分析將陸續發布。</p>
+        <p style="color:var(--muted);">Polymarket 宣布測試新的拍賣機制，可能改變短期流動性配置。詳細討論與我們的實驗影響分析將陸續發布。</p>
       </div>
 
       <div class="card">
         <h3>平台監管新聞速遞</h3>
         <p class="subtitle" style="margin-bottom:8px">2025-10-12</p>
-        <p style="color:var(--color-text-secondary);">針對加密市場與預測市場的監管動向，注意法規與上線市場限制。</p>
+        <p style="color:var(--muted);">針對加密市場與預測市場的監管動向，注意法規與上線市場限制。</p>
       </div>
 
       <div class="card">
         <h3>社群熱門市場回顧</h3>
         <p class="subtitle" style="margin-bottom:8px">2025-09-01</p>
-        <p style="color:var(--color-text-secondary);">每週精選：高波動市場與我們的策略回測結果摘要。</p>
+        <p style="color:var(--muted);">每週精選：高波動市場與我們的策略回測結果摘要。</p>
       </div>
     </div>
 

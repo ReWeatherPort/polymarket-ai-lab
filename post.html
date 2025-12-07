@@ -12,7 +12,7 @@
       html,body{height:100%;}
       body{font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--text); margin:0; padding:28px; -webkit-font-smoothing:antialiased}
       .container{max-width:var(--max-width); margin:0 auto; background:var(--surface); padding:36px; border-radius:12px; box-shadow:0 10px 30px rgba(17,24,39,0.06)}
-      a.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-weight:600}
+      a.back{display:inline-block;margin-bottom:18px;color:var(--color-accent);text-decoration:none;font-weight:600}
       .meta{color:var(--muted); font-size:13px; margin-bottom:18px}
       .post-title{font-size:28px;margin:0 0 8px 0;font-weight:700}
       /* content styling */
@@ -47,7 +47,7 @@
   <body>
 
   <nav>
-  <a href="#" class="logo">🚀 Polymarket AI Lab</a>
+  <a href="index.html" class="logo">🚀 Polymarket AI Lab</a>
   <ul>
     <li><a class="nav-pill" href="experiments/index.html">實驗</a></li>
     <li><a class="nav-pill" href="tools.html">工具</a></li>
@@ -107,6 +107,16 @@
         return {meta, body};
       }
 
+      async function tryFetchAny(candidates){
+        for (const p of candidates){
+          try{
+            const r = await fetch(p);
+            if (r.ok) return await r.text();
+          }catch(e){}
+        }
+        throw new Error('無法取得文章（所有候選路徑皆失敗）');
+      }
+
       async function load(){
         const postPath = getQueryParam('post');
         if (!postPath){
@@ -114,9 +124,24 @@
           return;
         }
         try{
-          const res = await fetch(postPath);
-          if (!res.ok) throw new Error('無法取得文章：HTTP ' + res.status);
-          const md = await res.text();
+          // build candidate paths to be robust across static hosting vs Hugo builds
+          const candidates = [];
+          // original param as-is
+          candidates.push(postPath);
+          // if it starts with content/, try without it
+          if (postPath.startsWith('content/')) candidates.push(postPath.replace(/^content\//, ''));
+          else candidates.push('content/' + postPath);
+          // try under posts/ as some builds output to posts/
+          if (!postPath.startsWith('posts/')) candidates.push('posts/' + postPath.replace(/^content\//, ''));
+          // add .md suffix variants
+          if (!postPath.endsWith('.md')){
+            candidates.push(postPath + '.md');
+            if (postPath.startsWith('content/')) candidates.push(postPath.replace(/^content\//,'') + '.md');
+            else candidates.push('content/' + postPath + '.md');
+            candidates.push('posts/' + postPath + '.md');
+          }
+
+          const md = await tryFetchAny(candidates);
           const {meta, body} = extractFrontmatter(md);
           // show title and meta
           const title = meta.title || '';
