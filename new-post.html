@@ -53,14 +53,26 @@
         <label for="slug" style="margin-top:10px">檔名 / slug（選填，預設由標題產生）</label>
         <input id="slug" type="text" placeholder="例如: okc-low-price-2025-12" />
 
-        <label for="md" style="margin-top:10px">Markdown 內容</label>
-        <textarea id="md" rows="14" placeholder="在這裡撰寫你的文章（支援標準 Markdown）"></textarea>
+            <label for="md" style="margin-top:10px">Markdown 內容</label>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+              <div id="toolbar" style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn-ghost" data-act="bold">B</button>
+                <button class="btn-ghost" data-act="italic">i</button>
+                <button class="btn-ghost" data-act="h2">H2</button>
+                <button class="btn-ghost" data-act="code">`code`</button>
+                <button class="btn-ghost" data-act="link">link</button>
+                <button class="btn-ghost" id="imageBtn">圖片</button>
+              </div>
+              <div style="margin-left:auto;color:#6b7280;font-size:13px">支援拖放圖片或貼上圖片（會內嵌為 data URL）</div>
+            </div>
+            <input id="imageInput" type="file" accept="image/*" style="display:none" />
+            <textarea id="md" rows="14" placeholder="在這裡撰寫你的文章（支援標準 Markdown）"></textarea>
 
-        <div class="controls">
-          <button id="downloadBtn" class="btn">下載 Markdown</button>
-          <button id="previewBtn" class="btn-ghost">更新預覽</button>
-          <button id="publishBtn" class="btn">發佈到 GitHub（選填）</button>
-        </div>
+            <div class="controls">
+              <button id="downloadBtn" class="btn">下載 Markdown</button>
+              <button id="previewBtn" class="btn-ghost">更新預覽</button>
+              <button id="publishBtn" class="btn">發佈到 GitHub（選填）</button>
+            </div>
 
         <p class="note">注意：直接發佈到 GitHub 需要一個有 repo 寫入權限的 Personal Access Token（repo scope）。Token 不會被儲存在伺服器上，僅在你的瀏覽器中使用。</p>
       </div>
@@ -78,7 +90,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/lib/common.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
   <script>
@@ -91,7 +103,10 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const previewBtn = document.getElementById('previewBtn');
     const publishBtn = document.getElementById('publishBtn');
+    const imageInput = document.getElementById('imageInput');
+    const imageBtn = document.getElementById('imageBtn');
 
+    // Utilities
     function slugify(s){
       return (s||'').toString().toLowerCase().trim()
         .replace(/\s+/g,'-')
@@ -106,22 +121,131 @@
       const excerpt = excerptEl.value.trim();
       const slug = slugEl.value.trim() || slugify(title) || `post-${Date.now()}`;
       const path = `content/posts/${slug}.md`;
-      const fm = ['---', `title: "${title.replace(/"/g,'\"')}"`, `date: ${date}`, `excerpt: "${excerpt.replace(/"/g,'\"')}"`, `tags: [${tags.map(t=>`"${t.replace(/"/g,'\"')}"`).join(', ')}]`, `path: ${path}`, '---\n\n'].join('\n');
+      const fmLines = ['---', `title: "${title.replace(/"/g,'\"')}"`, `date: ${date}`, `excerpt: "${excerpt.replace(/"/g,'\"')}"`, `tags: [${tags.map(t=>`"${t.replace(/"/g,'\"')}"`).join(', ')}]`, `path: ${path}`, '---\n\n'];
+      const fm = fmLines.join('\n');
       return {fm, slug, path};
     }
 
+    function uiEscape(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // Markdown preview with highlight
     function renderPreview(){
       const {fm} = generateFrontmatter();
       const content = fm + mdEl.value;
       const html = marked.parse(content);
       previewEl.innerHTML = html;
       document.querySelectorAll('pre code').forEach((block) => {
-        hljs.highlightElement(block);
+        try{ hljs.highlightElement(block); }catch(e){}
       });
     }
 
-    previewBtn.addEventListener('click', renderPreview);
+    // Debounce helper for live preview
+    function debounce(fn, wait){
+      let t;
+      return function(...args){ clearTimeout(t); t = setTimeout(()=>fn.apply(this,args), wait); };
+    }
 
+    const livePreview = debounce(renderPreview, 300);
+
+    // Insert/replace helper for textarea
+    function insertAtCursor(textarea, insertion, opts={}){
+      const start = textarea.selectionStart || 0;
+      const end = textarea.selectionEnd || 0;
+      const before = textarea.value.substring(0, start);
+      const after = textarea.value.substring(end);
+      textarea.value = before + insertion + after;
+      const pos = before.length + insertion.length;
+      textarea.selectionStart = textarea.selectionEnd = pos;
+      textarea.focus();
+      livePreview();
+    }
+
+    function wrapSelection(textarea, left, right){
+      const start = textarea.selectionStart || 0;
+      const end = textarea.selectionEnd || 0;
+      const sel = textarea.value.substring(start, end) || '';
+      const replacement = left + sel + right;
+      textarea.setRangeText(replacement, start, end, 'end');
+      textarea.focus();
+      livePreview();
+    }
+
+    // Toolbar actions
+    document.getElementById('toolbar').addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const act = btn.getAttribute('data-act');
+      if(!act) return;
+      if(act === 'bold') wrapSelection(mdEl, '**', '**');
+      if(act === 'italic') wrapSelection(mdEl, '*', '*');
+      if(act === 'h2') insertAtCursor(mdEl, '\n\n## ');
+      if(act === 'code') wrapSelection(mdEl, '`', '`');
+      if(act === 'link'){
+        const url = prompt('輸入連結 URL');
+        if(url) insertAtCursor(mdEl, `[link text](${url})`);
+      }
+    });
+
+    // Image upload & drag/drop/paste handlers
+    imageBtn.addEventListener('click', ()=> imageInput.click());
+    imageInput.addEventListener('change', async (ev)=>{
+      const f = ev.target.files && ev.target.files[0];
+      if(!f) return;
+      const data = await fileToDataUrl(f);
+      const name = f.name.replace(/\s+/g,'-');
+      insertAtCursor(mdEl, `![${name}](${data})`);
+      imageInput.value = '';
+    });
+
+    async function fileToDataUrl(file){
+      return await new Promise((res, rej)=>{
+        const r = new FileReader();
+        r.onload = ()=> res(r.result);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    }
+
+    // Drag & drop
+    mdEl.addEventListener('dragover', (e)=>{ e.preventDefault(); mdEl.style.outline = '2px dashed #cce7ea'; });
+    mdEl.addEventListener('dragleave', (e)=>{ mdEl.style.outline = ''; });
+    mdEl.addEventListener('drop', async (e)=>{
+      e.preventDefault(); mdEl.style.outline = '';
+      const items = e.dataTransfer.files;
+      if(items && items.length){
+        for(const f of items){ if(f.type.startsWith('image/')){
+            const data = await fileToDataUrl(f);
+            insertAtCursor(mdEl, `![${f.name}](${data})`);
+          } else {
+            // non-image: ignore or insert filename
+            insertAtCursor(mdEl, `\n\n[${f.name}]`);
+          }
+        }
+      }
+    });
+
+    // Paste image support
+    mdEl.addEventListener('paste', async (e)=>{
+      const items = e.clipboardData && e.clipboardData.items;
+      if(!items) return;
+      for(const it of items){
+        if(it.kind === 'file' && it.type.startsWith('image/')){
+          const f = it.getAsFile();
+          const data = await fileToDataUrl(f);
+          insertAtCursor(mdEl, `![pasted-image](${data})`);
+          e.preventDefault();
+          return;
+        }
+      }
+    });
+
+    // Live preview while typing
+    mdEl.addEventListener('input', livePreview);
+    titleEl.addEventListener('input', livePreview);
+    tagsEl.addEventListener('input', livePreview);
+    excerptEl.addEventListener('input', livePreview);
+
+    // Download
     downloadBtn.addEventListener('click', () => {
       const {fm, slug, path} = generateFrontmatter();
       const content = fm + mdEl.value + '\n';
@@ -135,6 +259,7 @@
       alert('已產生 Markdown 檔，請把它放到 repo 的 `content/posts/`，然後執行 `python .\\scripts\\generate_posts_manifest.py` 並推到 GitHub。');
     });
 
+    // Publish to GitHub (same as before, improved base64 handling)
     async function publishToGitHub(){
       const token = document.getElementById('ghToken').value.trim();
       if(!token){
@@ -146,9 +271,13 @@
       const repoName = 'polymarket-ai-lab';
       const branch = 'main';
       const apiPath = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${encodeURIComponent(path)}`;
-
       try{
-        const body = { message: `chore(posts): add ${slug}`, content: btoa(unescape(encodeURIComponent(content))), branch };
+        // proper base64 for unicode
+        const uint8 = new TextEncoder().encode(content);
+        let binary = '';
+        for (let i=0;i<uint8.length;i++) binary += String.fromCharCode(uint8[i]);
+        const base64 = btoa(binary);
+        const body = { message: `chore(posts): add ${slug}`, content: base64, branch };
         const res = await fetch(apiPath, { method: 'PUT', headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const data = await res.json();
         if(res.ok){
