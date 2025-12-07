@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Polymarket AI Lab - 預測市場數據實驗</title>
+  <!-- Favicon: place your icon file at assets/favicon/favicon.png or favicon.ico in repo root -->
+  <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
+  <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
   <style>
     :root {
       --color-primary: #32a8c2;
@@ -123,6 +126,10 @@
       justify-content: center;
       flex-wrap: wrap;
     }
+
+    .hero-tabs { display:flex; gap:12px; justify-content:center; margin-top:18px }
+    .hero-tabs .tab { padding:8px 14px; border-radius:999px; background: rgba(255,255,255,0.12); color: white; text-decoration:none; font-weight:600 }
+    .hero-tabs .tab:hover { background: rgba(255,255,255,0.2) }
 
     .btn {
       padding: 12px 24px;
@@ -482,6 +489,7 @@
   <a href="#" class="logo">🚀 Polymarket AI Lab</a>
   <ul>
     <li><a href="experiments/index.html">實驗</a></li>
+    <li><a href="tools.html">工具</a></li>
     <li><a href="#news">News</a></li>
     <li><a href="#guides">教學</a></li>
     <li><a href="#about">關於</a></li>
@@ -496,6 +504,12 @@
     <div class="hero-buttons">
       <button id="start-reading" class="btn btn-primary">開始閱讀</button>
       <button id="view-experiments" class="btn btn-secondary">查看實驗</button>
+    </div>
+    <div class="hero-tabs">
+      <a class="tab" href="experiments/index.html">實驗</a>
+      <a class="tab" href="#news">新聞</a>
+      <a class="tab" href="tools.html">工具</a>
+      <a class="tab" href="#blog">實驗日誌</a>
     </div>
   </section>
 
@@ -739,9 +753,9 @@
 
 <footer>
   <p>&copy; 2025 Polymarket AI Lab. 用數據驗證市場，用實驗學習金融。</p>
-  <p style="margin-top: 12px; font-size: 12px;">
+    <p style="margin-top: 12px; font-size: 12px;">
     本網站用於教育與研究目的。任何投資決策需自行承擔風險。 | 
-    <a href="#" style="color: inherit; text-decoration: underline;">隱私政策</a>
+    <a href="privacy.html" style="color: inherit; text-decoration: underline;">隱私政策</a>
   </p>
 </footer>
 
