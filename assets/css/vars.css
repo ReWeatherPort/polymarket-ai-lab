@@ -87,3 +87,34 @@ body { background: var(--bg); color: var(--text); font-family: Inter, ui-sans-se
 /* Toast notifications */
 .toast { pointer-events: auto; }
 .toast a { color: inherit; text-decoration: underline; }
+
+/* Site navigation (shared) */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+nav .logo { font-size: 18px; font-weight: 700; color: var(--color-primary); text-decoration: none; }
+nav ul { display: flex; align-items: center; gap: 12px; list-style: none; margin: 0; padding: 0; }
+nav ul li { margin: 0; }
+nav a.nav-pill { color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600; padding: 8px 12px; border-radius: 8px; transition: all .12s; }
+nav a.nav-pill:hover { background: rgba(50,168,194,0.06); }
+nav button.btn-ghost { margin-left: 8px; padding: 8px 10px; border-radius: 6px; background: transparent; border: 1px solid var(--border); cursor: pointer; }
+
+@media (max-width: 900px) {
+  nav ul { display: none; }
+  nav { padding: 10px 14px; }
+}
+
+/* ensure main content doesn't hide under fixed nav */
+main, .container { padding-top: 64px; }
