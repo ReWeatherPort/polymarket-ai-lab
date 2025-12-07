@@ -1,0 +1,100 @@
+{
+  "name": "Polymarket AI Lab - Daily Auto Post",
+  "nodes": [
+    {
+      "id": "sheets1",
+      "name": "Google Sheets - Read",
+      "type": "n8n-nodes-base.googleSheets",
+      "parameters": {
+        "operation": "lookup",
+        "sheetId": "your-google-sheet-id",
+        "range": "daily_experiments!A:G",
+        "returnAll": true
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": "Google Sheets OAuth2"
+      }
+    },
+    {
+      "id": "fn1",
+      "name": "Select Latest Row",
+      "type": "n8n-nodes-base.function",
+      "parameters": {
+        "functionCode": "const rows = items.map(i => i.json);\nconst last = rows[rows.length - 1];\nreturn [{ json: last }];"
+      }
+    },
+    {
+      "id": "fn2",
+      "name": "Compute Metrics",
+      "type": "n8n-nodes-base.function",
+      "parameters": {
+        "functionCode": "const r = $json;\nfunction pf(x){x=parseFloat(x);return isNaN(x)?0:x;}\nreturn [{ json: {\n  date: r.date,\n  experiment_type: r.experiment_type || 'okc_polymarket',\n  pnl: pf(r.pnl),\n  win_rate: pf(r.win_rate),\n  max_drawdown: pf(r.max_drawdown),\n  source_sheet_row_id: r.source_sheet_row_id || `sheet_row_${r.date}`,\n  notes: r.notes || ''\n}}];"
+      }
+    },
+    {
+      "id": "perplexity1",
+      "name": "Perplexity - Generate Body",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/v1/chat/completions",
+        "jsonParameters": true,
+        "options": { "timeout": 120000 },
+        "bodyParametersJson": "={\"model\":\"sonar-pro\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a financial experiment analyst.\"},{\"role\":\"user\",\"content\":$json.prompt}]}"
+      },
+      "credentials": {
+        "httpBasicAuth": ""
+      }
+    },
+    {
+      "id": "fn3",
+      "name": "Compose Markdown & Script",
+      "type": "n8n-nodes-base.function",
+      "parameters": {
+        "functionCode": "const data = $json;\nconst body = items[0].json.choices?.[0]?.message?.content || '內容生成失敗';\nconst md = `---\\n`+\n`title: \"OKC x Polymarket 實驗日誌｜${data.date}\"\\n`+\n`date: ${data.date}T10:00:00+08:00\\n`+\n`tags: [\"OKC實驗\",\"Polymarket\",\"NBA\",\"每日實驗日誌\"]\\n`+\n`experiment_type: \"${data.experiment_type}\"\\n`+\n`pnl: ${data.pnl}\\n`+\n`win_rate: ${data.win_rate}\\n`+\n`max_drawdown: ${data.max_drawdown}\\n`+\n`source_sheet_row_id: \"${data.source_sheet_row_id}\"\\n`+\n`---\\n\\n`+\nbody;\nconst script = `# Shorts 腳本 - ${data.date}\\n\\n【開場 2s】\\n旁白：OKC x Polymarket 今日實驗速覽！\\n\\n【數據 5s】\\n旁白：PnL：$ ${data.pnl}，勝率：${(data.win_rate*100).toFixed(0)}%，最大回撤：$ ${data.max_drawdown}。\\n\\n【策略 7s】\\n旁白：今日策略重點：低價買入 + 風險控制；觀察賽中波動，避免追高。\\n\\n【風險 5s】\\n旁白：注意流動性與滑點，單筆倉位不超過 2%，回撤達閾值即停損。\\n\\n【結尾 3s】\\n旁白：更多數據與教學，見 Polymarket AI Lab。\\n`;\nconst pathPost = `content/posts/okc-experiment-${data.date}.md`;\nconst pathScript = `static/scripts/shorts-${data.date}.md`;\nreturn [{json:{md, script, pathPost, pathScript}}];"
+      }
+    },
+    {
+      "id": "githubPost",
+      "name": "GitHub - Create Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/ReWeatherPort/polymarket-ai-lab/contents/{{ $json.pathPost }}",
+        "jsonParameters": true,
+        "options": { "timeout": 120000 },
+        "headers": {
+          "Authorization": "Bearer {{ $env.GITHUB_TOKEN }}",
+          "Accept": "application/vnd.github+json"
+        },
+        "bodyParametersJson": "={\"message\": \"Add daily experiment post: {{ $json.pathPost }}\", \"content\": {{ Buffer.from($json.md).toString('base64') }}, \"branch\": \"main\"}"
+      }
+    },
+    {
+      "id": "githubScript",
+      "name": "GitHub - Save Shorts Script",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/ReWeatherPort/polymarket-ai-lab/contents/{{ $json.pathScript }}",
+        "jsonParameters": true,
+        "options": { "timeout": 120000 },
+        "headers": {
+          "Authorization": "Bearer {{ $env.GITHUB_TOKEN }}",
+          "Accept": "application/vnd.github+json"
+        },
+        "bodyParametersJson": "={\"message\": \"Add shorts script: {{ $json.pathScript }}\", \"content\": {{ Buffer.from($json.script).toString('base64') }}, \"branch\": \"main\"}"
+      }
+    }
+  ],
+  "connections": {
+    "sheets1": { "main": [{ "node": "fn1", "type": "main", "index": 0 }] },
+    "fn1": { "main": [{ "node": "fn2", "type": "main", "index": 0 }] },
+    "fn2": { "main": [{ "node": "perplexity1", "type": "main", "index": 0 }] },
+    "perplexity1": { "main": [{ "node": "fn3", "type": "main", "index": 0 }] },
+    "fn3": { "main": [
+      { "node": "githubPost", "type": "main", "index": 0 },
+      { "node": "githubScript", "type": "main", "index": 0 }
+    ] }
+  }
+}
