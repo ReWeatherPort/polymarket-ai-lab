@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }} | {{ .Site.Title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{- with .Site.Params.site_description -}}
+  <meta name="description" content="{{ . }}">
+  {{- end -}}
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{{ .Site.BaseURL }}">Polymarket AI Lab</a> |
+      <a href="{{ .Site.BaseURL }}posts/">實驗日誌</a> |
+      <a href="{{ .Site.BaseURL }}notes/">教學與指南</a>
+    </nav>
+  </header>
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+  <footer>
+    <p>&copy; {{ now.Year }} Polymarket AI Lab</p>
+    <p style="font-size:12px">本網站用於教育與研究目的。任何投資決策需自行承擔風險。</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{{ define "main" }}
+<article>
+  <h1>{{ .Title }}</h1>
+  <p><small>{{ .Date.Format "2006-01-02" }}</small></p>
+
+  {{ partial "stats.html" . }}
+
+  <div class="content">
+    {{ .Content }}
+  </div>
+
+  {{ with .Params.tags }}
+  <section>
+    <h2>標籤</h2>
+    <ul>
+      {{ range . }}
+      <li><a href="{{ (print "/tags/" . | urlize) }}">{{ . }}</a></li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+</article>
+{{ end }}

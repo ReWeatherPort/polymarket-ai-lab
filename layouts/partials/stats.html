@@ -1,0 +1,27 @@
+<div class="stats-card">
+  <style>
+    .stats-card { border: 1px solid #e0e0e0; padding: 12px; border-radius: 8px; margin: 12px 0; }
+    .stats-row { display: flex; gap: 20px; flex-wrap: wrap; }
+    .stat { display: flex; flex-direction: column; }
+    .label { font-size: 12px; color: #626c71; text-transform: uppercase; }
+    .value { font-size: 18px; font-weight: 600; color: #32a8c2; }
+  </style>
+  <div class="stats-row">
+    <div class="stat">
+      <span class="label">PnL</span>
+      <span class="value">{{ .Params.pnl }}</span>
+    </div>
+    <div class="stat">
+      <span class="label">Win Rate</span>
+      <span class="value">{{ mul .Params.win_rate 100.0 | printf "%.0f" }}%</span>
+    </div>
+    <div class="stat">
+      <span class="label">Max Drawdown</span>
+      <span class="value">{{ .Params.max_drawdown }}</span>
+    </div>
+    <div class="stat">
+      <span class="label">Source Row</span>
+      <span class="value">{{ .Params.source_sheet_row_id }}</span>
+    </div>
+  </div>
+</div>
