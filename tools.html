@@ -6,11 +6,14 @@
   <title>工具與資源 - Polymarket AI Lab</title>
   <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
   <style>
-    :root{--color-primary:#32a8c2;--text:#134252;--bg:#f8fbfc}
+    :root{--color-primary:#32a8c2;--text:#134252;--bg:#f8fbfc;--muted:#6b7280}
+    [data-theme="dark"]{--bg:#071018;--text:#e6eef6;--muted:#9aa6ad}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
     .container{max-width:1100px;margin:0 auto}
     header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
     a.logo{font-weight:700;color:var(--color-primary);text-decoration:none}
+    nav a{margin-left:12px;padding:8px 10px;border-radius:8px}
+    #themeToggle{margin-left:8px}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
     .card{background:#fff;padding:18px;border-radius:10px;border:1px solid #e6eef0}
     .card h3{margin-top:0}
@@ -22,9 +25,10 @@
     <header>
       <a class="logo" href="index.html">🚀 Polymarket AI Lab</a>
       <nav>
-        <a href="index.html" style="margin-right:12px">首頁</a>
-        <a href="experiments/index.html" style="margin-right:12px">實驗</a>
+        <a href="index.html">首頁</a>
+        <a href="experiments/index.html">實驗</a>
         <a href="privacy.html">隱私政策</a>
+        <button id="themeToggle" class="btn-ghost" aria-label="切換主題">🌙</button>
       </nav>
     </header>
 
@@ -77,5 +81,16 @@
 
     <p style="margin-top:20px;color:#6b7280">如果你想把某個工具加入列表，請把連結或檔案放到 `static/`，或在 repo 建 issue，我會幫你加入。</p>
   </div>
+  <script>
+    (function(){
+      const btn = document.getElementById('themeToggle');
+      if(!btn) return;
+      const setTheme=(t)=>{document.documentElement.setAttribute('data-theme',t);btn.textContent=t==='dark'?'☀️':'🌙'};
+      const stored=localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(stored || (prefersDark ? 'dark' : 'light'));
+      btn.addEventListener('click', ()=>{const cur=document.documentElement.getAttribute('data-theme');const nxt=cur==='dark'?'light':'dark';setTheme(nxt);localStorage.setItem('theme',nxt);});
+    })();
+  </script>
 </body>
 </html>

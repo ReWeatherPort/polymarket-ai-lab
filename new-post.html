@@ -6,21 +6,30 @@
   <title>發表文章 - Polymarket AI Lab</title>
   <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
   <style>
-    :root{--color-primary:#32a8c2;--bg:#fbfcfd;--text:#134252}
+    :root{--color-primary:#32a8c2;--bg:#fbfcfd;--text:#134252;--muted:#6b7280}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:24px}
     header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
     a.logo{font-weight:700;color:var(--color-primary);text-decoration:none}
     .container{max-width:1100px;margin:0 auto}
     .editor{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     .panel{background:#fff;border:1px solid #e6eef0;border-radius:10px;padding:16px}
-    input[type=text], textarea{width:100%;padding:10px;border:1px solid #e6eef0;border-radius:8px}
+    input[type=text]{width:100%;padding:10px;border:1px solid #e6eef0;border-radius:8px}
+    textarea{width:100%;padding:12px;border:1px solid #e6eef0;border-radius:8px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono','Segoe UI Mono',monospace;font-size:14px;line-height:1.5;color:#21393f;min-height:220px}
     .controls{display:flex;gap:8px;margin-top:8px}
     .btn{padding:10px 14px;border-radius:8px;background:var(--color-primary);color:white;text-decoration:none;border:none;cursor:pointer}
-    .btn-ghost{background:transparent;color:var(--color-primary);border:1px solid var(--color-primary)}
+    .btn-ghost{background:transparent;color:var(--color-primary);border:1px solid var(--color-primary);padding:8px 10px;border-radius:6px}
+    .btn-ghost:hover{background:rgba(50,168,194,0.06)}
     label{display:block;font-weight:600;margin-bottom:6px}
     .meta{display:flex;gap:12px;align-items:center}
-    .preview{height:70vh;overflow:auto;padding:10px}
-    .note{font-size:13px;color:#6b7280;margin-top:8px}
+    .preview{height:70vh;overflow:auto;padding:18px;background:#fbffff;border-radius:6px;border:1px solid #e6eef0}
+    .preview h1,.preview h2,.preview h3{color:var(--text)}
+    .preview p{color:#334c53}
+    .preview pre{background:#0b1220;color:#c9d1d9;padding:12px;border-radius:6px;overflow:auto}
+    .preview code{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono','Segoe UI Mono',monospace;font-size:13px}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    #toolbar button{min-width:40px;min-height:36px;border-radius:6px}
+    .toolbar-icon{font-weight:700}
+    .muted{color:var(--muted)}
     @media(max-width:900px){.editor{grid-template-columns:1fr;}.preview{height:50vh}}
   </style>
 </head>
@@ -29,10 +38,11 @@
     <header>
       <a class="logo" href="index.html">🚀 Polymarket AI Lab</a>
       <nav>
-        <a href="index.html" style="margin-right:12px">首頁</a>
-        <a href="tools.html" style="margin-right:12px">工具</a>
-        <a href="experiments/index.html" style="margin-right:12px">實驗</a>
-        <a href="post.html" style="margin-right:12px">閱讀文章</a>
+        <a href="index.html">首頁</a>
+        <a href="tools.html">工具</a>
+        <a href="experiments/index.html">實驗</a>
+        <a href="post.html">閱讀文章</a>
+        <button id="themeToggle" class="btn-ghost" aria-label="切換主題">🌙</button>
       </nav>
     </header>
 
@@ -53,33 +63,33 @@
         <label for="slug" style="margin-top:10px">檔名 / slug（選填，預設由標題產生）</label>
         <input id="slug" type="text" placeholder="例如: okc-low-price-2025-12" />
 
-            <label for="md" style="margin-top:10px">Markdown 內容</label>
-            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <div id="toolbar" style="display:flex;gap:6px;flex-wrap:wrap">
-                <button class="btn-ghost" data-act="bold">B</button>
-                <button class="btn-ghost" data-act="italic">i</button>
-                <button class="btn-ghost" data-act="h2">H2</button>
-                <button class="btn-ghost" data-act="code">`code`</button>
-                <button class="btn-ghost" data-act="link">link</button>
-                <button class="btn-ghost" id="imageBtn">圖片</button>
-              </div>
-              <div style="margin-left:auto;color:#6b7280;font-size:13px">支援拖放圖片或貼上圖片（會內嵌為 data URL）</div>
-            </div>
-            <input id="imageInput" type="file" accept="image/*" style="display:none" />
-            <textarea id="md" rows="14" placeholder="在這裡撰寫你的文章（支援標準 Markdown）"></textarea>
+        <label for="md" style="margin-top:10px">Markdown 內容</label>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <div id="toolbar" style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn-ghost toolbar-icon" data-act="bold">B</button>
+            <button class="btn-ghost toolbar-icon" data-act="italic">i</button>
+            <button class="btn-ghost toolbar-icon" data-act="h2">H2</button>
+            <button class="btn-ghost toolbar-icon" data-act="code">`</button>
+            <button class="btn-ghost toolbar-icon" data-act="link">🔗</button>
+            <button class="btn-ghost toolbar-icon" id="imageBtn">🖼️</button>
+          </div>
+          <div style="margin-left:auto;color:var(--muted);font-size:13px">支援拖放圖片或貼上圖片（會內嵌為 data URL）</div>
+        </div>
+        <input id="imageInput" type="file" accept="image/*" style="display:none" />
+        <textarea id="md" rows="14" placeholder="在這裡撰寫你的文章（支援標準 Markdown）"></textarea>
 
-            <div class="controls">
-              <button id="downloadBtn" class="btn">下載 Markdown</button>
-              <button id="previewBtn" class="btn-ghost">更新預覽</button>
-              <button id="publishBtn" class="btn">發佈到 GitHub（選填）</button>
-            </div>
+        <div class="controls">
+          <button id="downloadBtn" class="btn">下載 Markdown</button>
+          <button id="previewBtn" class="btn-ghost">更新預覽</button>
+          <button id="publishBtn" class="btn">發佈到 GitHub（選填）</button>
+        </div>
 
         <p class="note">注意：直接發佈到 GitHub 需要一個有 repo 寫入權限的 Personal Access Token（repo scope）。Token 不會被儲存在伺服器上，僅在你的瀏覽器中使用。</p>
       </div>
 
       <div class="panel">
         <h3>即時預覽</h3>
-        <div id="preview" class="preview">預覽會在你按「更新預覽」時顯示。</div>
+        <div id="preview" class="preview">預覽會在你按「更新預覽」或編輯時自動顯示。</div>
         <div style="margin-top:12px">
           <label for="ghToken">GitHub Token（可選，直接在 repo 建檔）</label>
           <input id="ghToken" type="text" placeholder="ghp_xxx...（建議使用短期 token）" />
@@ -90,7 +100,7 @@
     </div>
   </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/lib/common.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
   <script>
@@ -126,8 +136,6 @@
       return {fm, slug, path};
     }
 
-    function uiEscape(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
     // Markdown preview with highlight
     function renderPreview(){
       const {fm} = generateFrontmatter();
@@ -148,7 +156,7 @@
     const livePreview = debounce(renderPreview, 300);
 
     // Insert/replace helper for textarea
-    function insertAtCursor(textarea, insertion, opts={}){
+    function insertAtCursor(textarea, insertion){
       const start = textarea.selectionStart || 0;
       const end = textarea.selectionEnd || 0;
       const before = textarea.value.substring(0, start);
@@ -245,6 +253,9 @@
     tagsEl.addEventListener('input', livePreview);
     excerptEl.addEventListener('input', livePreview);
 
+    // explicit preview button
+    if (previewBtn) previewBtn.addEventListener('click', renderPreview);
+
     // Download
     downloadBtn.addEventListener('click', () => {
       const {fm, slug, path} = generateFrontmatter();
@@ -295,8 +306,18 @@
     publishBtn.addEventListener('click', publishToGitHub);
 
     // initial sample content
-    mdEl.value = `歡迎使用 Polymarket AI Lab 的發表工具。\n\n在此撰寫你的實驗日誌、觀察或教學。\n\n## 範例小節\n\n- 條目 1\n- 條目 2\n\n\\`程式碼範例\\`\n\n\n`;
+    mdEl.value = "歡迎使用 Polymarket AI Lab 的發表工具。\n\n在此撰寫你的實驗日誌、觀察或教學。\n\n## 範例小節\n\n- 條目 1\n- 條目 2\n\n```程式碼範例```\n\n";
     renderPreview();
+  </script>
+  <script>
+    (function(){
+      const btn=document.getElementById('themeToggle'); if(!btn) return;
+      const setTheme=(t)=>{document.documentElement.setAttribute('data-theme',t);btn.textContent=t==='dark'?'☀️':'🌙'};
+      const stored=localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(stored || (prefersDark ? 'dark' : 'light'));
+      btn.addEventListener('click', ()=>{const cur=document.documentElement.getAttribute('data-theme');const nxt=cur==='dark'?'light':'dark';setTheme(nxt);localStorage.setItem('theme',nxt);});
+    })();
   </script>
 </body>
 </html>

@@ -8,18 +8,29 @@
   <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
   <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
   <style>
-    :root {
-      --color-primary: #32a8c2;
-      --color-primary-light: #50bdd6;
-      --color-primary-dark: #1d7480;
-      --color-accent: #a84b2f;
-      --color-success: #208080;
-      --color-warning: #ca8a04;
-      --color-bg: #fcfcf9;
-      --color-surface: #ffffff;
-      --color-text: #134252;
-      --color-text-secondary: #626c71;
-      --color-border: #e0e0e0;
+    :root{
+      --color-primary:#32a8c2;
+      --color-primary-light:#50bdd6;
+      --color-primary-dark:#1d7480;
+      --color-accent:#a84b2f;
+      --color-success:#208080;
+      --color-warning:#ca8a04;
+      --color-bg:#fcfcf9;
+      --color-surface:#ffffff;
+      --color-text:#134252;
+      --color-text-secondary:#626c71;
+      --color-border:#e0e0e0;
+      --card-bg: var(--color-surface);
+      --code-bg: #0b1220;
+    }
+    [data-theme="dark"]{
+      --color-bg:#071018;
+      --color-surface:#071018;
+      --color-text:#e6eef6;
+      --color-text-secondary:#9aa6ad;
+      --color-border:rgba(255,255,255,0.04);
+      --card-bg:#071018;
+      --code-bg:#021016;
     }
 
     * {
@@ -55,30 +66,12 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    nav .logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--color-primary);
-      text-decoration: none;
-    }
-
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 30px;
-    }
-
-    nav a {
-      color: var(--color-text);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    nav a:hover {
-      color: var(--color-primary);
-    }
+    nav .logo{font-size:18px;font-weight:700;color:var(--color-primary);text-decoration:none}
+    nav ul{display:flex;list-style:none;gap:12px;align-items:center}
+    nav a{color:var(--color-text);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:8px;transition:all .15s}
+    nav a:hover{background:rgba(50,168,194,0.06)}
+    nav .nav-pill{background:transparent}
+    nav #themeToggle{margin-left:8px}
 
     @media (max-width: 768px) {
       nav ul {
@@ -485,15 +478,16 @@
 </head>
 <body>
 
-<nav>
+  <nav>
   <a href="#" class="logo">🚀 Polymarket AI Lab</a>
-    <ul>
-    <li><a href="experiments/index.html">實驗</a></li>
-    <li><a href="tools.html">工具</a></li>
-    <li><a href="new-post.html">發表</a></li>
-    <li><a href="#news">News</a></li>
-    <li><a href="#guides">教學</a></li>
-    <li><a href="#about">關於</a></li>
+  <ul>
+    <li><a class="nav-pill" href="experiments/index.html">實驗</a></li>
+    <li><a class="nav-pill" href="tools.html">工具</a></li>
+    <li><a class="nav-pill" href="new-post.html">發表</a></li>
+    <li><a class="nav-pill" href="#news">News</a></li>
+    <li><a class="nav-pill" href="#guides">教學</a></li>
+    <li><a class="nav-pill" href="#about">關於</a></li>
+    <li><button id="themeToggle" class="btn-ghost" aria-label="切換主題">🌙</button></li>
   </ul>
 </nav>
 
@@ -891,6 +885,24 @@
   }
 
   loadPosts();
+</script>
+
+<!-- Theme toggle script: preserves choice in localStorage and respects system pref -->
+<script>
+  (function(){
+    const btn = document.getElementById('themeToggle');
+    if(!btn) return;
+    const setTheme = (t) => { document.documentElement.setAttribute('data-theme', t); btn.textContent = t==='dark' ? '☀️' : '🌙'; };
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(stored || (prefersDark ? 'dark' : 'light'));
+    btn.addEventListener('click', ()=>{
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+      localStorage.setItem('theme', next);
+    });
+  })();
 </script>
 
 </body>
