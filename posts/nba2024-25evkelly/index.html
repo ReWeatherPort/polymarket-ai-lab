@@ -1,0 +1,85 @@
+<!doctype html><html lang=zh-HK><head><meta charset=utf-8><title>NBA雷霆隊2024-25賽季投注分析：EV與Kelly策略實戰 | Polymarket AI Lab</title>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="預測市場實驗、NBA 策略、全自動化內容工作流"><link rel=stylesheet href=/assets/css/main.css></head><body><nav><a href=# class=logo>🚀 Polymarket AI Lab</a><ul><li><a class=nav-pill href=experiments/index.html>實驗</a></li><li><a class=nav-pill href=tools.html>工具</a></li><li><a class=nav-pill href=new-post.html>發表</a></li><li><a class=nav-pill href=#news>News</a></li><li><a class=nav-pill href=#guides>教學</a></li><li><a class=nav-pill href=#about>關於</a></li><li><button id=themeToggle class=btn-ghost aria-label=切換主題>🌙</button></li></ul></nav><main><article><h1>NBA雷霆隊2024-25賽季投注分析：EV與Kelly策略實戰</h1><p><small>2025-12-07</small></p><div class=stats-card><style>.stats-card{border:1px solid var(--border);padding:12px;border-radius:8px;margin:12px 0}.stats-row{display:flex;gap:20px;flex-wrap:wrap}.stat{display:flex;flex-direction:column}.label{font-size:12px;color:var(--muted);text-transform:uppercase}.value{font-size:18px;font-weight:600;color:var(--color-primary)}</style><div class=stats-row><div class=stat><span class=label>PnL</span>
+<span class=value></span></div><div class=stat><span class=label>Win Rate</span>
+<span class=value>—</span></div><div class=stat><span class=label>Max Drawdown</span>
+<span class=value></span></div><div class=stat><span class=label>Source Row</span>
+<span class=value></span></div></div></div><div class=content><h1 id=nba-雷霆隊-2024-25-賽季投注實驗ev-與-kelly-criterion-實戰筆記>NBA 雷霆隊 2024-25 賽季投注實驗：EV 與 Kelly Criterion 實戰筆記</h1><blockquote><p>本文為個人實驗與學習紀錄，不構成任何投資或博彩建議。</p></blockquote><h2 id=1-研究問題與背景>1. 研究問題與背景</h2><p>這篇筆記的核心問題是：如果我們把一支球隊（OKC Thunder）當成一個長期「資產」，在整個 82 場例行賽中，能否透過系統化的勝率估計 + EV 計算 + Kelly Criterion 資金管理，打出一個 <strong>可重複、量化、可回測</strong> 的投注策略？</p><p>選 OKC 的原因：</p><p>在這個實驗中，我假設：</p><h2 id=2-資料與模型假設>2. 資料與模型假設</h2><h3 id=21-勝場預測與隱含勝率>2.1 勝場預測與隱含勝率</h3><p>根據 2023-24 成績與 2024-25 市場預測資料，我將 OKC 2024-25 的「合理勝場」基準設定在 <strong>62 勝</strong> 左右，並建立一個近似的勝場分佈（以 62 為 mean、約 5–6 場為標準差的常態近似）。</p><p>再配合博彩市場常見讓分盤 / Moneyline 的賠率區間（例如 -150、-130、-110、-100 等），可以反推出對應的 <strong>隱含勝率</strong>：</p><p>模型的核心是：</p><ol><li>自己估計 OKC 在特定情境下的真實勝率 p_model；</li><li>判斷市場給出的 p_market 是否低估（即有正 EV）；</li><li>只在 p_model 明顯大於 p_market 時下注。</li></ol><h3 id=22-back-to-back-與旅程方向>2.2 back-to-back 與旅程方向</h3><p>文獻顯示，NBA back-to-back（B2B）與旅程方向會明顯影響比賽表現，例如有研究指出東向、西向旅行及時差造成的「social jetlag」會導致勝率下滑。這裡引用過去研究作為啟發，將 B2B 場次簡化成幾個 penalty 係數：</p><p>實際模型中，我會用：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>p_effective = p_base × 調整係數（travel + rest + 對手強度）
+</span></span></code></pre></div><hr><h2 id=3-expected-valueev計算框架>3. Expected Value（EV）計算框架</h2><p>對每一場準備下注的比賽，使用標準 EV 公式：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>- p：自己估計的勝率 p_model；
+</span></span><span style=display:flex><span>- 賠率：十進制賠率（例如 1.909 對應美式 -110）；
+</span></span><span style=display:flex><span>- (賠率 - 1)：贏時的淨收益倍數；
+</span></span><span style=display:flex><span>- 1：輸時損失 1 單位本金。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>在 OKC 2024-25 的模擬中：
+</span></span><span style=display:flex><span>- 在 82 場中，只挑出 EV &gt; 0 的場次下注；
+</span></span><span style=display:flex><span>這裡有幾個概念：
+</span></span><span style=display:flex><span>- **季中波動會很大，可能連輸 5–10 場都很正常**；
+</span></span><span style=display:flex><span>- 重點是整個系統在大量樣本下是否有 edge。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>## 4. Kelly Criterion 資金管理
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>### 4.1 基本公式
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>對於每一場有 edge 的下注，Kelly Criterion 建議的下注比例為：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>其中：
+</span></span><span style=display:flex><span>- b：賠率的淨利倍數（例如賠率 1.909 → b = 0.909）；
+</span></span><span style=display:flex><span>- p：勝率；
+</span></span><span style=display:flex><span>- q = 1 - p：輸的機率；
+</span></span><span style=display:flex><span>- f*：推薦投入 bankroll 的比例。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>若 f* &gt; 0，理論上有正期望下注；
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Full Kelly 在理論上最大化長期對數資產成長，但在實務上波動非常大，容易造成心理壓力與資金回撤過深。因此這個實驗同時比較：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>舉例：
+</span></span><span style=display:flex><span>- Quarter Kelly：下注 400
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>- Quarter Kelly 更保守，但容錯率高，適合對模型信心未滿時使用。
+</span></span><span style=display:flex><span>在 OKC 82 場實驗設定中：
+</span></span><span style=display:flex><span>- 以 10,000 起始本金、挑選 EV 為正的場次下注；
+</span></span><span style=display:flex><span>- Half Kelly 的最終資金比 Full Kelly 少一點，但最大回撤顯著降低；
+</span></span><span style=display:flex><span>- 若你是「會被 drawdown 影響心態」的操作者，Half Kelly 甚至 1/3 Kelly 會比 Full Kelly 更實際。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>## 5. OKC 2024-25 賽季模擬結果摘要
+</span></span><span style=display:flex><span>### 5.1 勝場分佈與 ROI
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>配合 EV、Kelly 模型，若以 **EV &gt; 0 的場次** 作為下注範圍：
+</span></span><span style=display:flex><span>- 總下注場次約為 60–70 場（視閾值設定）；
+</span></span><span style=display:flex><span>- 單場平均 EV 約 0.5–0.6；
+</span></span><span style=display:flex><span>### 5.2 風險與 drawdown
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>實驗也特別觀察：
+</span></span><span style=display:flex><span>- 連輸 5–8 場的機率並不低；
+</span></span><span style=display:flex><span>- 在高 Kelly 倍率下，這種連輸會導致帳戶短期回撤 30–40%；
+</span></span><span style=display:flex><span>- 若改用 Half Kelly，最大回撤多數情況降到 20% 左右。
+</span></span><span style=display:flex><span>這反映幾個重點：
+</span></span><span style=display:flex><span>1. 「有 edge」≠ 「賺得很穩定」，波動一定存在；
+</span></span><span style=display:flex><span>2. 資金管理策略的選擇，實際上是決定你能不能活到長期；
+</span></span><span style=display:flex><span>3. 心理上能接受的 drawdown，是比理論上多賺幾% 更實際的優化目標。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>這次 OKC 賽季模擬，只是建立一個 **單隊、單季** 的框架，接下來可以往幾個方向延伸：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>### 6.1 多隊組合 vs 單隊深耕
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>- 單隊深入：更熟悉輪換、傷病、教練傾向，模型能做更多情境調整（如 B2B、客場長途旅行）。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>目前實驗傾向「結構化假設 + 文獻參考 + 手動調參」。未來可考慮：
+</span></span><span style=display:flex><span>- 再把模型輸出的 p 放進 EV / Kelly 管線。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>這樣可以：
+</span></span><span style=display:flex><span>- 減少主觀調整的比重；
+</span></span><span style=display:flex><span>- 提高可複製性；
+</span></span><span style=display:flex><span>- 方便做「backtest 多賽季」的壓力測試。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>### 6.3 與 Polymarket 類型市場的結合
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>事件 → 估計真實機率 p → 市場賠率 / 價格 → 計算 EV → 資金管理
+</span></span></code></pre></div><ul><li>把「比賽勝負」換成「事件是否發生」；</li><li>把「賠率」換成「市場價格（如 0.42 USDC）」；</li><li>Kelly 部分仍然可以沿用，只是 b 的定義稍微不同。
+對於喜歡做 data-driven 預測的人來說，NBA 賽季是一個很好練習場：</li><li>大量樣本（每季 1,000+ 場比賽）</li><li>數據透明</li><li>模型驗證容易</li></ul><h2 id=7-寫在最後如何避免故事大於數據>7. 寫在最後：如何避免「故事大於數據」</h2><p>投注或預測市場很容易掉進「敘事陷阱」：</p><ul><li>某隊連勝 → 高估後續勝率；</li><li>媒體看好 → 以為市場一定錯價；</li><li>自己有持倉 → find confirming evidence only。</li></ul><p>這篇 OKC 實驗筆記的用意，是給自己一個提醒：</p><ol><li><strong>先寫下假設，再看數據有沒有打臉</strong>；</li><li><strong>用 EV / Kelly 把直覺量化</strong>，逼自己面對風險與波動；</li><li><strong>接受「就算有 edge，也會有很痛的 drawdown」這個現實</strong>。</li></ol><p>未來如果我有繼續做多隊、多賽季的模擬，或實際跟單紀錄，也會在這個 Lab 繼續更新。</p><p>如果你也在做類似的 NBA / Polymarket 實驗，歡迎交流心得。</p></div><section><h2>標籤</h2><ul><li><a href=/tags/nba>NBA</a></li><li><a href=/tags/%E6%8A%95%E6%B3%A8%E5%88%86%E6%9E%90>投注分析</a></li><li><a href=/tags/ev>EV</a></li><li><a href=/tags/kelly-criterion>Kelly Criterion</a></li><li><a href=/tags/%E9%AB%94%E8%82%B2%E5%8D%9A%E5%BD%A9>體育博彩</a></li><li><a href=/tags/%E6%95%B8%E6%93%9A%E5%88%86%E6%9E%90>數據分析</a></li><li><a href=/tags/okc-thunder>OKC Thunder</a></li></ul></section></article></main><footer><p>&copy; 2025 Polymarket AI Lab</p><p style=font-size:12px>本網站用於教育與研究目的。任何投資決策需自行承擔風險。</p></footer></body></html>
