@@ -40,13 +40,13 @@
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      box-shadow: var(--shadow-sm);
     }
 
     nav .logo{font-size:18px;font-weight:700;color:var(--color-primary);text-decoration:none}
     nav ul{display:flex;list-style:none;gap:12px;align-items:center}
     nav a{color:var(--text);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:8px;transition:all .15s}
-    nav a:hover{background:rgba(50,168,194,0.06)}
+    nav a:hover{background:var(--primary-overlay)}
     nav .nav-pill{background:transparent}
     nav #themeToggle{margin-left:8px}
 
@@ -98,8 +98,8 @@
     }
 
     .hero-tabs { display:flex; gap:12px; justify-content:center; margin-top:18px }
-    .hero-tabs .tab { padding:8px 14px; border-radius:999px; background: rgba(255,255,255,0.12); color: white; text-decoration:none; font-weight:600 }
-    .hero-tabs .tab:hover { background: rgba(255,255,255,0.2) }
+    .hero-tabs .tab { padding:8px 14px; border-radius:999px; background: var(--white-glass); color: white; text-decoration:none; font-weight:600 }
+    .hero-tabs .tab:hover { background: var(--white-glass-strong) }
 
     .btn {
       padding: 12px 24px;
@@ -120,7 +120,7 @@
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      box-shadow: var(--shadow-md);
     }
 
     .btn-secondary {
@@ -171,7 +171,7 @@
 
     .card:hover {
       border-color: var(--color-primary);
-      box-shadow: 0 8px 24px rgba(50, 168, 194, 0.12);
+      box-shadow: var(--primary-shadow);
       transform: translateY(-4px);
     }
 
@@ -200,13 +200,13 @@
     }
 
     .card { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
-    .card:hover, .card.is-hover, .card:focus-within { transform: translateY(-6px); box-shadow: var(--card-shadow); border-color: rgba(50,168,194,0.12); }
-    .card:focus { outline: 3px solid rgba(50,168,194,0.12); }
+    .card:hover, .card.is-hover, .card:focus-within { transform: translateY(-6px); box-shadow: var(--card-shadow); border-color: var(--primary-ring); }
+    .card:focus { outline: 3px solid var(--primary-ring); }
 
     /* Feature Cards */
     .feature-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 32px;
       display: flex;

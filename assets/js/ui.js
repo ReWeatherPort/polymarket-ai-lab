@@ -98,7 +98,15 @@
     el.classList.add(type === 'error' ? 'toast-error' : 'toast-default');
     el.style.padding = '10px 14px';
     el.style.borderRadius = '8px';
-    el.style.boxShadow = '0 6px 24px rgba(2,6,23,0.15)';
+    // prefer CSS variable for consistent theming
+    try{
+      const s = getComputedStyle(document.documentElement).getPropertyValue('--shadow-lg').trim();
+      if (s) el.style.boxShadow = s;
+      else {
+        const fallback = getComputedStyle(document.documentElement).getPropertyValue('--card-shadow').trim();
+        if (fallback) el.style.boxShadow = fallback;
+      }
+    }catch(e){ try{ const fallback = getComputedStyle(document.documentElement).getPropertyValue('--card-shadow').trim(); if (fallback) el.style.boxShadow = fallback; }catch(err){} }
     el.style.maxWidth = '320px';
     el.style.fontSize = '13px';
     el.style.opacity = '0';
