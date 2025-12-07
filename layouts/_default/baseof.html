@@ -10,13 +10,20 @@
   <link rel="stylesheet" href="/assets/css/main.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="{{ .Site.BaseURL }}">Polymarket AI Lab</a> |
-      <a href="{{ .Site.BaseURL }}posts/">實驗日誌</a> |
-      <a href="{{ .Site.BaseURL }}notes/">教學與指南</a>
-    </nav>
-  </header>
+
+  <nav>
+  <a href="#" class="logo">🚀 Polymarket AI Lab</a>
+  <ul>
+    <li><a class="nav-pill" href="experiments/index.html">實驗</a></li>
+    <li><a class="nav-pill" href="tools.html">工具</a></li>
+    <li><a class="nav-pill" href="new-post.html">發表</a></li>
+    <li><a class="nav-pill" href="#news">News</a></li>
+    <li><a class="nav-pill" href="#guides">教學</a></li>
+    <li><a class="nav-pill" href="#about">關於</a></li>
+    <li><button id="themeToggle" class="btn-ghost" aria-label="切換主題">🌙</button></li>
+  </ul>
+</nav>
+
   <main>
     {{ block "main" . }}{{ end }}
   </main>
