@@ -1,0 +1,81 @@
+/* Shared variables and common UI styles for Polymarket AI Lab */
+:root{
+  --color-primary: #32a8c2;
+  --color-primary-light: #50bdd6;
+  --color-primary-dark: #195a66;
+  --color-primary: #267e92;
+  --color-accent: #a84b2f;
+  --color-success: #208080;
+  --color-warning: #ca8a04;
+  --bg: #fcfcf9;
+  --surface: #ffffff;
+  --text: #0f2930;
+  --heading: #0b2b32;
+  --lead: #274648;
+  --muted: #5f6b6f;
+  --border: #e6eef0;
+  --card-bg: var(--surface);
+  --code-bg: #0b1220;
+  --code-text: #e6eef6;
+  --inline-code-bg: #f3f4f6;
+  --table-head-bg: #f6fbfb;
+  --tag-bg: #eef6f8;
+  --tag-color: #036;
+  --icon-bg: rgba(50,168,194,0.08);
+  --icon-color: var(--color-primary);
+  --card-shadow: 0 8px 24px rgba(17,24,39,0.06);
+  --on-primary: #ffffff;
+  --on-surface: var(--text);
+  --danger: #c01530;
+}
+
+[data-theme="dark"]{
+  --bg: #071018;
+  --surface: #071018;
+  --text: #e6eef6;
+  --heading: #e6eef6;
+  --lead: #c3d6df;
+  --muted: #9aa6ad;
+  --border: rgba(255,255,255,0.04);
+  --card-bg: #071018;
+  --code-bg: #021016;
+  --code-text: #c9d1d9;
+  --inline-code-bg: #0f1724;
+  --table-head-bg: #07181f;
+  --icon-bg: rgba(43,176,200,0.08);
+  --icon-color: #93e1f5;
+  --card-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  --tag-bg: rgba(255,255,255,0.03);
+  --tag-color: var(--text);
+  --danger: #ff6b6b;
+}
+
+/* Common UI classes */
+body { background: var(--bg); color: var(--text); }
+
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.card:hover, .card.is-hover, .card:focus-within { transform: translateY(-6px); box-shadow: var(--card-shadow); border-color: rgba(50,168,194,0.12); }
+.card:focus { outline: 3px solid rgba(50,168,194,0.12); }
+
+.card-icon { width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; background:var(--icon-bg); color:var(--icon-color); font-size:20px; margin-bottom:10px; flex-shrink:0; }
+
+.tag { display:inline-block; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:6px; }
+.tag-experiment { background: var(--tag-bg); color: var(--tag-color); }
+.tag-guide { background: var(--table-head-bg); color: var(--heading); }
+
+.read-more { display:inline-block; margin-top:8px; padding:8px 12px; background:var(--color-primary); color:var(--on-primary); border-radius:6px; text-decoration:none; font-weight:600 }
+
+/* Post list specifics */
+.post-tags { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap }
+
+/* Buttons */
+.btn { padding:12px 20px; border-radius:8px; cursor:pointer; border:none }
+.btn-primary { background: var(--color-primary); color: var(--on-primary); }
+.btn-secondary { background: transparent; color: var(--on-primary); border: 2px solid var(--on-primary); }
+
+/* Small helpers for accessibility */
+.post-link { display:block; text-decoration:none; color:inherit }
+
+@media (max-width: 900px) {
+  .card-icon { width:40px; height:40px; font-size:18px }
+}

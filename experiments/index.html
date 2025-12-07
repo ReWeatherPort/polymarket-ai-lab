@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>實驗列表 - Polymarket AI Lab</title>
   <link rel="icon" type="image/png" href="../assets/favicon/favicon.png">
+  <link rel="stylesheet" href="../assets/css/vars.css">
   <style>
-    :root{
-      --color-primary:#32a8c2;--text:#134252;--bg:#f8fbfc;--surface:#fff;--border:#e0e0e0;--muted:#6b7280
-    }
-    [data-theme="dark"]{--bg:#071018;--surface:#071018;--text:#e6eef6;--border:rgba(255,255,255,0.04);--muted:#9aa6ad}
+    /* Page styles — colors defined in ../assets/css/vars.css */
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:20px}
     .container{max-width:1000px;margin:0 auto}
     header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
@@ -58,5 +56,6 @@
       btn.addEventListener('click',()=>{const cur=document.documentElement.getAttribute('data-theme');const nxt=cur==='dark'?'light':'dark';setTheme(nxt);localStorage.setItem('theme',nxt);});
     })();
   </script>
+  <script src="../assets/js/ui.js"></script>
 </body>
 </html>
