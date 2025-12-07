@@ -834,7 +834,9 @@
       // render cards
       container.innerHTML = '';
       posts.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
-      posts.forEach(post => {
+      // render only the latest N posts (change `displayCount` to adjust)
+      const displayCount = 4;
+      posts.slice(0, displayCount).forEach(post => {
         const card = document.createElement('a');
         card.href = `post.html?post=${encodeURIComponent(post.path)}`;
         card.style.textDecoration = 'none';
