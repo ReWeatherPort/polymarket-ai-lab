@@ -367,6 +367,10 @@
       color: #166534;
     }
 
+    /* post tags and read-more button */
+    .post-tags { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .read-more { display:inline-block; margin-top:12px; padding:8px 12px; background:var(--color-primary); color:white; border-radius:6px; text-decoration:none; font-weight:600 }
+
     /* CTA Section */
     .cta {
       background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
@@ -477,9 +481,9 @@
 <nav>
   <a href="#" class="logo">🚀 Polymarket AI Lab</a>
   <ul>
-    <li><a href="#experiments">實驗</a></li>
+    <li><a href="experiments/index.html">實驗</a></li>
+    <li><a href="#news">News</a></li>
     <li><a href="#guides">教學</a></li>
-    <li><a href="#tools">工具</a></li>
     <li><a href="#about">關於</a></li>
   </ul>
 </nav>
@@ -490,8 +494,8 @@
     <h1>用數據與實驗玩 Polymarket</h1>
     <p>透過系統化的預測市場實驗，理解市場定價邏輯。從 Polymarket 到 NBA，我們用數據說話。</p>
     <div class="hero-buttons">
-      <button class="btn btn-primary">開始閱讀</button>
-      <button class="btn btn-secondary">查看實驗</button>
+      <button id="start-reading" class="btn btn-primary">開始閱讀</button>
+      <button id="view-experiments" class="btn btn-secondary">查看實驗</button>
     </div>
   </section>
 
@@ -528,6 +532,7 @@
     <h2>正在進行的實驗</h2>
     <p class="subtitle">每日更新，透明記錄</p>
 
+    <a href="experiments/okc.html" style="text-decoration:none; color:inherit;">
     <div class="experiment-item">
       <div class="experiment-header">
         <span class="experiment-title">
@@ -558,7 +563,9 @@
         </div>
       </div>
     </div>
+    </a>
 
+    <a href="experiments/news.html" style="text-decoration:none; color:inherit;">
     <div class="experiment-item">
       <div class="experiment-header">
         <span class="experiment-title">
@@ -581,52 +588,79 @@
         </div>
       </div>
     </div>
+    </a>
   </section>
 
-  <!-- How It Works -->
-  <section>
-    <h2>完整流程</h2>
-    <p class="subtitle">從數據到變現，全自動化</p>
+  <!-- Experiments Categories -->
+  <section id="categories">
+    <h2>實驗類別</h2>
+    <p class="subtitle">針對不同題材的 Polymarket 實驗範例與方法論</p>
 
-    <div class="feature-card">
-      <div class="feature-number">1</div>
-      <div class="feature-content">
-        <h3>📊 數據收集</h3>
-        <p>每日自動從 Polymarket API 和 NBA 官方數據源拉取最新行情、比賽結果，存入 Google Sheets。</p>
+    <div class="grid">
+      <a href="experiments/index.html" class="card">
+        <div class="card-icon">🏀</div>
+        <h3>體育 / NBA</h3>
+        <p>以比賽結果市場為主，低價買入策略、場中套利、賽前波動分析。</p>
+      </a>
+
+      <a href="experiments/index.html" class="card">
+        <div class="card-icon">🗳️</div>
+        <h3>選舉 / 政治</h3>
+        <p>長期市場行為、民調與價格偏差、事件驅動的價格跳動分析。</p>
+      </a>
+
+      <a href="experiments/index.html" class="card">
+        <div class="card-icon">💹</div>
+        <h3>經濟指標 / 宏觀</h3>
+        <p>利用重大數據發布前後的市場波動測試交易機會與風險管理。</p>
+      </a>
+
+      <a href="experiments/index.html" class="card">
+        <div class="card-icon">⛓️</div>
+        <h3>加密 / Crypto</h3>
+        <p>探索與加密資產相關市場的特殊流動性與異常波動事件。</p>
+      </a>
+
+      <a href="experiments/index.html" class="card">
+        <div class="card-icon">📰</div>
+        <h3>新聞事件</h3>
+        <p>監控突發新聞並模擬事件驅動的交易策略與市場回應。</p>
+      </a>
+
+      <a href="experiments/index.html" class="card">
+        <div class="card-icon">🔬</div>
+        <h3>研究範疇</h3>
+        <p>方法論、統計顯著性測試與可重現性實驗流程。</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Polymarket News -->
+  <section id="news">
+    <h2>Polymarket 新聞</h2>
+    <p class="subtitle">追蹤 Polymarket 平台與市場動態、重要上線市場與政策變動</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Polymarket 新功能上線（示範）</h3>
+        <p class="subtitle" style="margin-bottom:8px">2025-11-30</p>
+        <p style="color:var(--color-text-secondary);">Polymarket 宣布測試新的拍賣機制，可能改變短期流動性配置。詳細討論與我們的實驗影響分析將陸續發布。</p>
+      </div>
+
+      <div class="card">
+        <h3>平台監管新聞速遞</h3>
+        <p class="subtitle" style="margin-bottom:8px">2025-10-12</p>
+        <p style="color:var(--color-text-secondary);">針對加密市場與預測市場的監管動向，注意法規與上線市場限制。</p>
+      </div>
+
+      <div class="card">
+        <h3>社群熱門市場回顧</h3>
+        <p class="subtitle" style="margin-bottom:8px">2025-09-01</p>
+        <p style="color:var(--color-text-secondary);">每週精選：高波動市場與我們的策略回測結果摘要。</p>
       </div>
     </div>
 
-    <div class="feature-card">
-      <div class="feature-number">2</div>
-      <div class="feature-content">
-        <h3>🤖 AI 分析</h3>
-        <p>Python 腳本計算 PnL、勝率、最大回撤；n8n 調用 Perplexity API 自動生成分析文稿。</p>
-      </div>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-number">3</div>
-      <div class="feature-content">
-        <h3>✍️ 內容輸出</h3>
-        <p>自動生成實驗日誌、短影片腳本。AI 寫稿保留人類觀點（策略分析、風險提醒）。</p>
-      </div>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-number">4</div>
-      <div class="feature-content">
-        <h3>📱 多渠道發佈</h3>
-        <p>同時更新網站、YouTube Shorts、TikTok、社群媒體。一次設置，自動分發。</p>
-      </div>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-number">5</div>
-      <div class="feature-content">
-        <h3>💰 變現</h3>
-        <p>Google AdSense、YouTube 分潤、聯盟行銷、數位商品（模板、流程、Prompt）。</p>
-      </div>
-    </div>
+    <p style="margin-top:18px"><a href="https://polymarket.com/" target="_blank" rel="noopener">更多 Polymarket 官方資訊</a></p>
   </section>
 
   <!-- Guides Section -->
@@ -685,60 +719,13 @@
     </div>
   </section>
 
-  <!-- Tools Section -->
-  <section id="tools">
-    <h2>開源工具 & 模板</h2>
-    <p class="subtitle">即用型資源，幫你快速開始</p>
+  <!-- Removed: 開源工具 & 模板 (moved into more focused sections) -->
 
-    <div class="grid">
-      <div class="card" style="cursor: pointer;">
-        <div class="card-icon">📊</div>
-        <span class="tag tag-tool">Google Sheets</span>
-        <h3>OKC 實驗追蹤模板</h3>
-        <p>完整的日期、價格、結果、PnL 記錄表。包含自動計算公式。</p>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;">獲取模板</button>
-      </div>
-
-      <div class="card" style="cursor: pointer;">
-        <div class="card-icon">⚙️</div>
-        <span class="tag tag-tool">n8n Flow</span>
-        <h3>自動寫稿 + 發佈</h3>
-        <p>從 Google Sheets 讀數據 → Perplexity 寫稿 → 自動發佈到網站。</p>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;">獲取 Flow</button>
-      </div>
-
-      <div class="card" style="cursor: pointer;">
-        <div class="card-icon">🐍</div>
-        <span class="tag tag-tool">Python 腳本</span>
-        <h3>Polymarket API 連接器</h3>
-        <p>抓取市場數據、計算指標、生成 JSON。直接整合到 n8n。</p>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;">獲取代碼</button>
-      </div>
-
-      <div class="card" style="cursor: pointer;">
-        <div class="card-icon">💬</div>
-        <span class="tag tag-tool">Prompt 集合</span>
-        <h3>LLM Prompt 模板</h3>
-        <p>實驗日誌、短影片腳本、教學文生成。複製即用，快速出稿。</p>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;">獲取 Prompts</button>
-      </div>
-
-      <div class="card" style="cursor: pointer;">
-        <div class="card-icon">🎬</div>
-        <span class="tag tag-tool">影片模板</span>
-        <h3>CapCut 短影片範本</h3>
-        <p>預設的文字樣式、BGM、過場。批量製作 Shorts 更快。</p>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;">獲取模板</button>
-      </div>
-
-      <div class="card" style="cursor: pointer;">
-        <div class="card-icon">📘</div>
-        <span class="tag tag-tool">GitHub Repo</span>
-        <h3>完整項目模板</h3>
-        <p>GitHub Pages + Hugo 網站架構、所有上述工具的整合版本。</p>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 12px;">前往 GitHub</button>
-      </div>
-    </div>
+  <!-- Blog -->
+  <section id="blog">
+    <h2>最新實驗日誌 / Blog</h2>
+    <p class="subtitle">之後會自動列出每日 OKC / Polymarket 實驗日誌。</p>
+    <div id="posts-list" class="grid"></div>
   </section>
 
   <!-- CTA -->
@@ -763,7 +750,7 @@
   document.querySelectorAll('nav a').forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
-      if (href.startsWith('#')) {
+      if (href && href.startsWith('#')) {
         e.preventDefault();
         const target = document.querySelector(href);
         if (target) {
@@ -773,7 +760,27 @@
     });
   });
 
-  // Button interactions
+  // Hero button actions
+  document.getElementById('start-reading')?.addEventListener('click', () => {
+    const el = document.querySelector('#blog');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
+    document.getElementById('view-experiments')?.addEventListener('click', () => {
+    // redirect to experiments list page (separate page)
+    window.location.href = 'experiments/index.html';
+  });
+
+  // Download / open buttons in tools
+  document.querySelectorAll('.download-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const url = btn.getAttribute('data-href');
+      if (!url) return;
+      // open external links or relative files in new tab
+      window.open(url, '_blank');
+    });
+  });
+
+  // Button hover interactions
   document.querySelectorAll('.btn').forEach(btn => {
     btn.addEventListener('mouseover', function() {
       this.style.transform = 'translateY(-2px)';
@@ -795,6 +802,80 @@
   document.querySelectorAll('.card, .feature-card, .experiment-item').forEach(el => {
     observer.observe(el);
   });
+
+  // Load posts manifest and render list
+  async function loadPosts() {
+    const container = document.getElementById('posts-list');
+    if (!container) return;
+    container.innerHTML = '<p style="color: #626c71;">載入中…</p>';
+    try {
+      // try multiple candidate URLs to locate posts manifest
+      const candidates = [
+        './posts/posts.json',
+        'posts/posts.json',
+        new URL('posts/posts.json', window.location.href).href
+      ];
+      let res = null;
+      for (const u of candidates) {
+        try {
+          const r = await fetch(u, { cache: 'no-store' });
+          if (r && r.ok) {
+            res = r;
+            break;
+          }
+        } catch (e) {
+          // ignore and try next
+        }
+      }
+      if (!res) throw new Error('找不到 posts/posts.json — 已嘗試路徑: ' + candidates.join(', '));
+      const posts = await res.json();
+      if (!Array.isArray(posts) || posts.length === 0) {
+        container.innerHTML = '<p style="color: #626c71;">目前尚無文章。請將 Markdown 檔放到 `content/posts/`，並使用 `scripts/generate_posts_manifest.py` 產生 `posts/posts.json`。</p>';
+        return;
+      }
+
+      // render cards
+      container.innerHTML = '';
+      posts.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
+      posts.forEach(post => {
+        const card = document.createElement('a');
+        card.href = `post.html?post=${encodeURIComponent(post.path)}`;
+        card.style.textDecoration = 'none';
+
+        // build tags HTML if available
+        let tagsHtml = '';
+        if (post.tags && Array.isArray(post.tags)) {
+          tagsHtml = '<div class="post-tags">' + post.tags.map(t => `<span class="tag" style="background:#eef6f8;color:#036;">${escapeHtml(t)}</span>`).join('') + '</div>';
+        } else if (post.tags && typeof post.tags === 'string') {
+          tagsHtml = `<div class="post-tags"><span class="tag" style="background:#eef6f8;color:#036;">${escapeHtml(post.tags)}</span></div>`;
+        }
+
+        card.innerHTML = `
+          <div class="card" style="min-height:120px;">
+            <h3 style="margin-bottom:8px;">${escapeHtml(post.title || 'Untitled')}</h3>
+            <p style="color: #626c71; font-size:13px; margin-bottom:8px;">${post.date || ''}</p>
+            <p style="color: #626c71; font-size:14px;">${escapeHtml(post.excerpt || '')}</p>
+            ${tagsHtml}
+            <div><span class="read-more">閱讀更多</span></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    } catch (err) {
+      console.error('loadPosts error', err);
+      container.innerHTML = `<p style="color:#c01530;">載入文章清單失敗：${escapeHtml(err.message)}。<br>確認已存在 ` +
+        "`posts/posts.json`，或在 repo 執行 `python scripts/generate_posts_manifest.py` 來產生。" +
+        " 如果你在本機以 file:// 打開，請改用本地伺服器或將檔案推上 GitHub Pages。" +
+        `</p>`;
+    }
+  }
+
+  function escapeHtml(s) {
+    if (!s) return '';
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]);
+  }
+
+  loadPosts();
 </script>
 
 </body>

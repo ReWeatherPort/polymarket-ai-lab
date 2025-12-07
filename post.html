@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>文章檢視器 - Polymarket AI Lab</title>
+    <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <style>
+      :root{
+        --max-width:900px;
+        --bg:#f8f9fb;
+        --surface:#ffffff;
+        --muted:#6b7280;
+        --text:#12202a;
+        --accent:#32a8c2;
+      }
+      html,body{height:100%;}
+      body{font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--text); margin:0; padding:28px; -webkit-font-smoothing:antialiased}
+      .container{max-width:var(--max-width); margin:0 auto; background:var(--surface); padding:36px; border-radius:12px; box-shadow:0 10px 30px rgba(17,24,39,0.06)}
+      a.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-weight:600}
+      .meta{color:var(--muted); font-size:13px; margin-bottom:18px}
+      .post-title{font-size:28px;margin:0 0 8px 0;font-weight:700}
+      /* content styling */
+      #post-content{color:var(--text); line-height:1.8}
+      #post-content h1,#post-content h2,#post-content h3{color:var(--text); margin-top:24px}
+      #post-content h1{font-size:28px}
+      #post-content h2{font-size:22px}
+      #post-content h3{font-size:18px}
+      #post-content p{margin:12px 0}
+      #post-content ul,#post-content ol{margin:12px 0 12px 20px}
+      #post-content blockquote{border-left:4px solid rgba(0,0,0,0.06); padding:12px 16px; color:var(--muted); background:linear-gradient(90deg, rgba(0,0,0,0.01), transparent)}
+      /* images */
+      #post-content img{max-width:100%; height:auto; display:block; margin:12px 0; border-radius:8px}
+      figure{margin:0}
+      figcaption{font-size:13px;color:var(--muted); margin-bottom:12px}
+      /* code blocks */
+      pre{background:#0b1220; color:#e6eef6; padding:14px; border-radius:8px; overflow:auto; font-size:13px}
+      code{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; font-size:0.93em}
+      /* inline code */
+      p code, li code { background: #f3f4f6; padding: 0 6px; border-radius:6px; }
+      /* tables */
+      table{width:100%; border-collapse:collapse; margin:16px 0}
+      th,td{border:1px solid #e6eef0; padding:8px; text-align:left}
+      th{background:#f6fbfb}
+      /* responsive */
+      @media (max-width:720px){
+        .container{padding:20px}
+        .post-title{font-size:22px}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a class="back" href="index.html">← 返回首頁</a>
+      <div id="post-meta" class="meta">
+        <div id="post-title" class="post-title"></div>
+      </div>
+      <article id="post-content">載入中…</article>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      // Configure marked for sane output
+      marked.setOptions({
+        gfm: true,
+        breaks: false,
+        headerIds: true,
+        mangle: false,
+      });
+
+      function getQueryParam(name){
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+      }
+
+      function extractFrontmatter(md){
+        const m = md.match(/^---\n([\s\S]*?)\n---/);
+        if (!m) return {meta:{}, body: md};
+        const metaRaw = m[1];
+        const meta = {};
+        metaRaw.split(/\n/).forEach(line => {
+          const idx = line.indexOf(':');
+          if (idx>0){
+            const k = line.slice(0,idx).trim();
+            let v = line.slice(idx+1).trim();
+            if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1,-1);
+            meta[k]=v;
+          }
+        });
+        const body = md.replace(/^---[\s\S]*?---\n?/,'');
+        return {meta, body};
+      }
+
+      async function load(){
+        const postPath = getQueryParam('post');
+        if (!postPath){
+          document.getElementById('post-content').innerText = '未指定文章路徑。';
+          return;
+        }
+        try{
+          const res = await fetch(postPath);
+          if (!res.ok) throw new Error('無法取得文章：HTTP ' + res.status);
+          const md = await res.text();
+          const {meta, body} = extractFrontmatter(md);
+          // show title and meta
+          const title = meta.title || '';
+          const date = meta.date || '';
+          document.getElementById('post-title').innerText = title + (date ? (' • ' + date) : '');
+
+          // parse markdown
+          const html = marked.parse(body);
+          const container = document.getElementById('post-content');
+          container.innerHTML = html;
+
+          // highlight code blocks
+          document.querySelectorAll('pre code').forEach((block) => {
+            try { hljs.highlightElement(block); } catch(e){ /* highlight.js may fail for unknown lang */ }
+          });
+
+          // make external links open in new tab
+          document.querySelectorAll('#post-content a').forEach(a => {
+            try{
+              const href = a.getAttribute('href') || '';
+              if (href.startsWith('http')){
+                a.setAttribute('target','_blank');
+                a.setAttribute('rel','noopener');
+              }
+            }catch(e){}
+          });
+
+        }catch(err){
+          document.getElementById('post-content').innerText = '載入文章失敗：' + err.message;
+        }
+      }
+      load();
+    </script>
+  </body>
+</html>

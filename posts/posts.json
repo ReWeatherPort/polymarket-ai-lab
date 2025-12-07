@@ -1,0 +1,14 @@
+[
+  {
+    "title": "OKC x Polymarket 實驗日誌｜2025-01-01",
+    "date": "2025-01-01T10:00:00+08:00",
+    "path": "content/posts/okc-experiment-2025-01-01.md",
+    "excerpt": "當天實驗概述\n今天的 OKC 實驗採用「低價買入」策略：在 Polymarket 找到 OKC 勝率市場中當天的最低買入價位，使用固定倉位配置進場。",
+    "tags": [
+      "OKC實驗",
+      "Polymarket",
+      "NBA",
+      "每日實驗日誌"
+    ]
+  }
+]
