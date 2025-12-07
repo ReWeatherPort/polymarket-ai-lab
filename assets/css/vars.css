@@ -1,18 +1,17 @@
 /* Shared variables and common UI styles for Polymarket AI Lab */
 :root{
-  --color-primary: #32a8c2;
+  --color-primary: #236a76;
   --color-primary-light: #50bdd6;
-  --color-primary-dark: #195a66;
-  --color-primary: #267e92;
+  --color-primary-dark: #184f55;
   --color-accent: #a84b2f;
   --color-success: #208080;
   --color-warning: #ca8a04;
-  --bg: #fcfcf9;
+  --bg: #f7f8f8;
   --surface: #ffffff;
-  --text: #0f2930;
-  --heading: #0b2b32;
+  --text: #0b2b32;
+  --heading: #071b20;
   --lead: #274648;
-  --muted: #5f6b6f;
+  --muted: #586066;
   --border: #e6eef0;
   --card-bg: var(--surface);
   --code-bg: #0b1220;
@@ -27,6 +26,8 @@
   --on-primary: #ffffff;
   --on-surface: var(--text);
   --danger: #c01530;
+  --radius: 10px;
+  --container-max: 1100px;
 }
 
 [data-theme="dark"]{
@@ -34,7 +35,7 @@
   --surface: #071018;
   --text: #e6eef6;
   --heading: #e6eef6;
-  --lead: #c3d6df;
+  --lead: #bfcfda;
   --muted: #9aa6ad;
   --border: rgba(255,255,255,0.04);
   --card-bg: #071018;
@@ -44,20 +45,18 @@
   --table-head-bg: #07181f;
   --icon-bg: rgba(43,176,200,0.08);
   --icon-color: #93e1f5;
-  --card-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  --card-shadow: 0 12px 36px rgba(0,0,0,0.45);
   --tag-bg: rgba(255,255,255,0.03);
   --tag-color: var(--text);
   --danger: #ff6b6b;
 }
 
 /* Common UI classes */
-body { background: var(--bg); color: var(--text); }
-
-.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
 .card:hover, .card.is-hover, .card:focus-within { transform: translateY(-6px); box-shadow: var(--card-shadow); border-color: rgba(50,168,194,0.12); }
 .card:focus { outline: 3px solid rgba(50,168,194,0.12); }
 
-.card-icon { width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; background:var(--icon-bg); color:var(--icon-color); font-size:20px; margin-bottom:10px; flex-shrink:0; }
+.card-icon { width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; background:var(--icon-bg); color:var(--icon-color); font-size:20px; margin-bottom:10px; flex-shrink:0; }
 
 .tag { display:inline-block; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:6px; }
 .tag-experiment { background: var(--tag-bg); color: var(--tag-color); }
@@ -69,9 +68,9 @@ body { background: var(--bg); color: var(--text); }
 .post-tags { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap }
 
 /* Buttons */
-.btn { padding:12px 20px; border-radius:8px; cursor:pointer; border:none }
+.btn { padding:12px 20px; border-radius:8px; cursor:pointer; border:none; font-weight:600 }
 .btn-primary { background: var(--color-primary); color: var(--on-primary); }
-.btn-secondary { background: transparent; color: var(--on-primary); border: 2px solid var(--on-primary); }
+.btn-secondary { background: transparent; color: var(--text); border: 2px solid var(--border); }
 
 /* Small helpers for accessibility */
 .post-link { display:block; text-decoration:none; color:inherit }
@@ -79,3 +78,8 @@ body { background: var(--bg); color: var(--text); }
 @media (max-width: 900px) {
   .card-icon { width:40px; height:40px; font-size:18px }
 }
+
+/* Page container helper */
+.container { max-width: var(--container-max); margin-left: auto; margin-right: auto; padding: 0 20px; }
+
+body { background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; line-height:1.6; }

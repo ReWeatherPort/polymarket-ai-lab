@@ -271,7 +271,7 @@
       alert('已產生 Markdown 檔，請把它放到 repo 的 `content/posts/`，然後執行 `python .\\scripts\\generate_posts_manifest.py` 並推到 GitHub。');
     });
 
-    // Publish to GitHub (same as before, improved base64 handling)
+    // Publish to GitHub: create-or-update (handles existing file by fetching sha)
     async function publishToGitHub(){
       const token = document.getElementById('ghToken').value.trim();
       if(!token){
@@ -282,25 +282,50 @@
       const repoOwner = 'ReWeatherPort';
       const repoName = 'polymarket-ai-lab';
       const branch = 'main';
-      const apiPath = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${encodeURIComponent(path)}`;
+      const apiPath = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
+      const headers = { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' };
+
+      publishBtn.disabled = true;
+      const prevLabel = publishBtn.textContent;
+      publishBtn.textContent = '發佈中…';
+
       try{
-        // proper base64 for unicode
+        // check if file exists to get sha (for update)
+        let sha = null;
+        try{
+          const getRes = await fetch(apiPath + `?ref=${branch}`, { method: 'GET', headers });
+          if (getRes.ok){
+            const getData = await getRes.json();
+            sha = getData.sha;
+          }
+        }catch(e){ /* ignore - file may not exist */ }
+
+        // proper base64 for unicode (robust)
         const uint8 = new TextEncoder().encode(content);
         let binary = '';
         for (let i=0;i<uint8.length;i++) binary += String.fromCharCode(uint8[i]);
         const base64 = btoa(binary);
+
         const body = { message: `chore(posts): add ${slug}`, content: base64, branch };
-        const res = await fetch(apiPath, { method: 'PUT', headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        if (sha) body.sha = sha; // include sha if updating
+
+        const res = await fetch(apiPath, { method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const data = await res.json();
         if(res.ok){
-          alert('已發佈到 GitHub： ' + (data.content && data.content.html_url ? data.content.html_url : '請檢查 repo')); 
+          const url = data.content && data.content.html_url ? data.content.html_url : `https://github.com/${repoOwner}/${repoName}/blob/${branch}/${path}`;
+          alert('已發佈到 GitHub： ' + url);
         } else {
-          console.error(data);
-          alert('發佈失敗：' + (data.message || JSON.stringify(data)));
+          console.error('Publish error', data);
+          let msg = data && data.message ? data.message : 'Unknown error';
+          if (data && data.errors) msg += '\n' + JSON.stringify(data.errors);
+          alert('發佈失敗：' + msg);
         }
       }catch(err){
         console.error(err);
         alert('發佈時發生錯誤：' + err.message);
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.textContent = prevLabel;
       }
     }
 
